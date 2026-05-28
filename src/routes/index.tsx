@@ -26,6 +26,8 @@ import {
   CONTACT_EMAIL,
   CONTACT_PHONE_DISPLAY,
   CONTACT_PHONE_URL,
+  CONTACT_SECONDARY_PHONE_DISPLAY,
+  CONTACT_SECONDARY_PHONE_URL,
   CONTACT_WHATSAPP_DISPLAY,
   CONTACT_WHATSAPP_URL,
 } from "@/lib/contact";
@@ -758,10 +760,10 @@ function Footer() {
           <div className="text-sm sm:col-span-2 md:col-span-1 md:text-right">
             <div className="mb-2 font-medium text-foreground">Phone</div>
             <a
-              href={CONTACT_PHONE_URL}
+              href={CONTACT_SECONDARY_PHONE_URL}
               className="block text-muted-foreground transition-colors hover:text-brand-red"
             >
-              {CONTACT_PHONE_DISPLAY}
+              {CONTACT_SECONDARY_PHONE_DISPLAY}
             </a>
             <a
               href={CONTACT_WHATSAPP_URL}
