@@ -4,7 +4,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
-import heroVideo from "@/assets/hero-video - Trim.mp4";
+import { GridScan } from "@/components/site/GridScan";
 import tejasvi from "@/assets/team-tejasvi.webp";
 import harshith from "@/assets/team-harshith.png";
 import prajwal from "@/assets/team-prajwal.png";
@@ -24,6 +24,7 @@ import { WorkTeaser } from "@/components/site/WorkGrid";
 import { CAREER_OPENINGS } from "@/data/careers";
 import { SERVICE_GROUPS } from "@/data/services";
 import { CASE_STUDIES, FEATURED_PROJECT } from "@/data/work";
+import ScrollStack, { ScrollStackItem } from "@/components/site/ScrollStack";
 import {
   CONTACT_EMAIL,
   CONTACT_PHONE_DISPLAY,
@@ -189,9 +190,6 @@ function Home() {
       <JsonLd data={[homeSchema, founderSchema]} />
       <BackgroundGrid />
       <SiteHeader />
-      <div className="site-container pt-[4.25rem] pb-0 -mb-[4.25rem] relative z-20">
-        <Breadcrumbs items={[]} />
-      </div>
       <Hero />
       <ClientStrip />
       <Services />
@@ -213,53 +211,28 @@ function Home() {
 // ──────────────────────────────────────────────────────────────────────────
 
 function Hero() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    video.muted = true;
-    void video.play().catch(() => {
-      /* autoplay blocked until user gesture */
-    });
-  }, []);
 
   return (
     <section id="top" className="relative border-b border-border-dim">
       {/* Grid stack: video pins in back, copy scrolls in front */}
       <div className="grid grid-cols-1">
-        <div className="col-start-1 row-start-1 sticky top-0 z-0 h-svh w-full self-start overflow-hidden pointer-events-none">
-          <svg aria-hidden className="absolute size-0 overflow-hidden">
-            <defs>
-              <filter
-                id="hero-video-sharpen"
-                colorInterpolationFilters="sRGB"
-                x="-2%"
-                y="-2%"
-                width="104%"
-                height="104%"
-              >
-                <feConvolveMatrix
-                  order="3"
-                  kernelMatrix="0 -0.75 0 -0.75 4 -0.75 0 -0.75 0"
-                  preserveAlpha="true"
-                />
-              </filter>
-            </defs>
-          </svg>
-          {/* suppressHydrationWarning: Vite dev HMR appends ?t=… to imported asset URLs on the client */}
-          <video
-            ref={videoRef}
-            className="hero-video absolute inset-0 h-full w-full object-cover"
-            src={heroVideo}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            aria-hidden
-            suppressHydrationWarning
-          />
+        <div className="col-start-1 row-start-1 sticky top-0 z-0 h-svh w-full self-start overflow-hidden">
+          <div className="absolute inset-0 z-0 bg-background">
+            <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+              <GridScan
+                sensitivity={0.55}
+                lineThickness={1}
+                linesColor="#2F293A"
+                gridScale={0.1}
+                scanColor="#EF4444"
+                scanOpacity={0.4}
+                enablePost
+                bloomIntensity={0.6}
+                chromaticAberration={0.002}
+                noiseIntensity={0.01}
+              />
+            </div>
+          </div>
           {/* Black gradient layers over video */}
           <div
             className="pointer-events-none absolute inset-0 z-[1] bg-[linear-gradient(180deg,transparent_0%,rgba(0,0,0,0.25)_35%,rgba(0,0,0,0.65)_65%,#000_100%)]"
@@ -275,14 +248,14 @@ function Hero() {
           <div className="flex h-svh w-full flex-col justify-end pt-[4.25rem] max-sm:pb-8 sm:pb-0">
             <div className="site-container max-w-5xl pb-24 sm:pb-12 md:pb-16">
               <p className="text-xs sm:text-sm text-brand-silver mb-4 max-w-md">
-                Trusted Mysore Tech Startup · Est. 2024
+                Research-first digital agency · Est. 2024
               </p>
 
               <HeroHeadline className="font-display text-[clamp(1.75rem,4.25vw,3.75rem)] font-bold leading-[1.05] tracking-tight text-balance max-w-2xl mb-4 sm:mb-5 text-foreground" />
 
               <div className="grid md:grid-cols-[minmax(0,22rem)_1fr] gap-6 md:gap-10 items-end">
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-pretty max-w-md">
-                  We are the best software development agency in Mysore, building websites, SaaS, ERP, and mobile products. Expert frontend developers mentoring final year engineering projects for CS students.
+                  We are a research-first studio building digital infrastructure for startups and MSMEs. We build scalable SaaS, custom ERPs, and high-performance websites that become business assets.
                 </p>
                 <div className="flex flex-wrap items-center gap-4 md:justify-end">
                   <a
@@ -490,21 +463,27 @@ function Industries() {
           Versatile by design.
           <span className="text-muted-foreground"> Industry-agnostic by architecture.</span>
         </h2>
-        <ul className="grid grid-cols-2 md:grid-cols-3 gap-px bg-border-dim border border-border-dim">
-          {INDUSTRIES.map((ind, i) => (
-            <li
-              key={ind}
-              className="bg-background flex items-baseline justify-between gap-2 p-4 sm:p-5 md:p-6 group hover:bg-muted/30 transition-colors min-w-0"
-            >
-              <span className="font-display text-base sm:text-lg md:text-xl font-medium min-w-0 text-pretty">
-                {ind}
-              </span>
-              <span className="font-mono text-[10px] text-muted-foreground group-hover:text-brand-red transition-colors">
-                / {String(i + 1).padStart(2, "0")}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <div style={{ height: "400px", position: "relative" }} className="-mx-5 px-5 md:mx-0 md:px-0">
+          <ScrollStack
+            itemDistance={20}
+            itemScale={0.03}
+            stackPosition="15%"
+          >
+            {INDUSTRIES.map((ind, i) => (
+              <ScrollStackItem
+                key={ind}
+                itemClassName="bg-background flex items-center justify-between gap-3 p-4 sm:p-5 md:p-6 border border-border-bright rounded-2xl md:rounded-3xl"
+              >
+                <span className="font-display text-xl sm:text-2xl md:text-3xl font-medium min-w-0 text-pretty">
+                  {ind}
+                </span>
+                <span className="font-mono text-sm text-brand-red transition-colors shrink-0">
+                  / {String(i + 1).padStart(2, "0")}
+                </span>
+              </ScrollStackItem>
+            ))}
+          </ScrollStack>
+        </div>
       </div>
     </section>
   );
@@ -526,12 +505,12 @@ function Founders() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border-dim border border-border-dim">
           {LEADERSHIP.map((p) => (
-            <article key={p.name} className="bg-background p-5 lg:p-6 group">
+            <article key={p.name} className="bg-background p-5 lg:p-6 group cursor-pointer" tabIndex={0}>
               <div className="aspect-[3/4] bg-neutral-900 mb-4 overflow-hidden relative">
                 <TeamPhoto
                   src={p.img}
                   alt={p.name}
-                  className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0"
+                  className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-active:grayscale-0 group-focus:grayscale-0"
                 />
               </div>
               <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">

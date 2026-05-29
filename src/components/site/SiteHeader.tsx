@@ -48,11 +48,11 @@ export function SiteHeader() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 w-full transition-[background-color,border-color,box-shadow] duration-300",
           scrolled || menuOpen
-            ? "border-b border-border-dim bg-background shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
+            ? "border-b border-border-dim bg-black shadow-[0_8px_30px_rgba(0,0,0,0.45)]"
             : "border-b border-transparent bg-transparent shadow-none",
         )}
       >
-        <SiteContainer className="flex h-[4.25rem] items-center justify-between gap-4">
+        <SiteContainer className="flex min-h-[6rem] py-2 items-center justify-between gap-4">
           <Link
             to="/"
             className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
@@ -61,14 +61,14 @@ export function SiteHeader() {
             <img
               src={logo}
               alt="AdMark Digitals"
-              className="h-12 w-12 shrink-0 object-contain sm:h-14 sm:w-14"
+              className="h-20 w-20 shrink-0 object-contain sm:h-[6rem] sm:w-[6rem] drop-shadow-md"
               suppressHydrationWarning
             />
             <div className="min-w-0 flex flex-col leading-tight">
-              <span className="truncate font-display text-sm font-semibold tracking-tight sm:text-base">
+              <span className="truncate font-display text-lg font-semibold tracking-tight sm:text-2xl">
                 AdMark Digitals
               </span>
-              <span className="hidden text-[11px] text-muted-foreground mt-0.5 sm:block truncate">
+              <span className="hidden text-xs text-muted-foreground mt-0.5 sm:block truncate">
                 Mysuru · Bengaluru · Hyderabad
               </span>
             </div>

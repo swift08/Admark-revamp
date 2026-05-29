@@ -19,6 +19,7 @@ import {
   Shield,
   ChevronDown,
   MessageSquare,
+  Mail,
 } from "lucide-react";
 import logo from "@/assets/logo-admark.webp";
 import rexuLogo from "@/assets/WhatsApp_Image_2026-05-28_at_2.42.07_PM-removebg-preview.png";
@@ -125,6 +126,72 @@ function ServiceCard({ icon: Icon, title, desc, index, isAdmark }: ServiceCardPr
   );
 }
 
+interface RexuAccordionCardProps {
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  title: string;
+  subtitle: string;
+  index: number;
+  children: React.ReactNode;
+}
+
+function RexuAccordionCard({ icon: Icon, title, subtitle, index, children }: RexuAccordionCardProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      className="group relative overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-500 hover:border-lime-400/50"
+    >
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full p-4 sm:p-5 text-left"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3 flex-1 min-w-0">
+            <Icon 
+              className="w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 mt-0.5 transition-colors duration-500 text-lime-400" 
+              strokeWidth={1.5} 
+            />
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm sm:text-base font-semibold text-white mb-1">{title}</h3>
+              {!isOpen && (
+                <p className="text-xs sm:text-sm text-slate-400 line-clamp-1">{subtitle}</p>
+              )}
+            </div>
+          </div>
+          <ChevronDown
+            className={`w-5 h-5 text-slate-400 flex-shrink-0 transition-transform duration-300 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+      </button>
+      
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+              <div className="pl-9 text-slate-300 text-sm sm:text-base leading-relaxed">
+                {children}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      <div className="absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-lime-400/5" />
+    </motion.div>
+  );
+}
+
 function ScanPage() {
   const [activeTab, setActiveTab] = useState<TabType>("admark");
 
@@ -157,28 +224,30 @@ function ScanPage() {
   const themeColors = {
     admark: {
       primary: "red",
-      bgGradient: "from-red-500/10 to-red-600/10",
+      bgGradient: "from-red-500/5 to-red-600/5",
       borderColor: "border-red-500",
       textColor: "text-red-400",
       btnBg: "bg-red-600 hover:bg-red-700",
       shadowColor: "shadow-[0_0_30px_rgba(239,68,68,0.3)]",
-      radialBg: "rgba(239,68,68,0.15)",
+      radialBg: "rgba(239,68,68,0.06)",
+      mainBg: "bg-black",
     },
     rexo: {
       primary: "lime",
-      bgGradient: "from-lime-500/10 to-lime-600/10",
+      bgGradient: "from-lime-500/5 to-lime-600/5",
       borderColor: "border-lime-400",
       textColor: "text-lime-400",
       btnBg: "bg-lime-400 hover:bg-lime-300 text-black",
       shadowColor: "shadow-[0_0_30px_rgba(163,230,53,0.3)]",
-      radialBg: "rgba(163,230,53,0.15)",
+      radialBg: "rgba(163,230,53,0.06)",
+      mainBg: "bg-black",
     },
   };
 
   const currentTheme = themeColors[activeTab];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-x-hidden transition-all duration-700">
+    <div className={`min-h-screen ${currentTheme.mainBg} text-white overflow-x-hidden transition-all duration-700`}>
       <JsonLd data={scanSchema} />
       <motion.div 
         key={activeTab}
@@ -191,7 +260,7 @@ function ScanPage() {
         }}
       />
 
-      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12 sm:space-y-16">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 pt-12 pb-32 sm:pt-16 sm:pb-36 space-y-12 sm:space-y-16">
         <Breadcrumbs items={[{ name: "Founder & REXU", url: "/scan" }]} />
         <motion.div
           initial="hidden"
@@ -269,6 +338,13 @@ function ScanPage() {
                       <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
                     </svg>
                   </a>
+                  <a
+                    href="mailto:tejasvijois@gmail.com"
+                    className="w-11 h-11 rounded-full bg-gradient-to-br from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-rose-500/50"
+                    aria-label="Email"
+                  >
+                    <Mail className="w-5 h-5 text-white" />
+                  </a>
                 </div>
               </div>
             </div>
@@ -287,38 +363,13 @@ function ScanPage() {
               onClick={() => setActiveTab("admark")}
               className={`relative overflow-hidden rounded-xl transition-all duration-500 aspect-video ${
                 activeTab === "admark"
-                  ? "bg-gradient-to-br from-red-500/20 to-red-600/20 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]"
-                  : "bg-white/5 border border-white/10 hover:bg-white/10"
+                  ? "bg-black border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]"
+                  : "bg-black border border-white/10 hover:border-white/20"
               }`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {/* Stylish Gradient Border Effect */}
-              {activeTab === "admark" && (
-                <>
-                  <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-red-600/10 rounded-xl"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-red-400/5 via-transparent to-red-600/10 rounded-xl" />
-                </>
-              )}
-              
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center p-3 sm:p-8"
-                animate={activeTab === "admark" ? {
-                  filter: [
-                    "drop-shadow(0 0 20px rgba(239, 68, 68, 0.6))",
-                    "drop-shadow(0 0 30px rgba(239, 68, 68, 0.8))",
-                    "drop-shadow(0 0 20px rgba(239, 68, 68, 0.6))"
-                  ]
-                } : {}}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
+              <motion.div className="absolute inset-0 flex items-center justify-center p-3 sm:p-8">
                 <img 
                   src={logo} 
                   alt="Admark" 
@@ -331,38 +382,13 @@ function ScanPage() {
               onClick={() => setActiveTab("rexo")}
               className={`relative overflow-hidden rounded-xl transition-all duration-500 aspect-video ${
                 activeTab === "rexo"
-                  ? "bg-gradient-to-br from-lime-500/20 to-lime-600/20 border-2 border-lime-400 shadow-[0_0_30px_rgba(163,230,53,0.3)]"
-                  : "bg-white/5 border border-white/10 hover:bg-white/10"
+                  ? "bg-black border-2 border-lime-400 shadow-[0_0_30px_rgba(163,230,53,0.3)]"
+                  : "bg-black border border-white/10 hover:border-white/20"
               }`}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              {/* Stylish Gradient Border Effect */}
-              {activeTab === "rexo" && (
-                <>
-                  <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute inset-0 bg-gradient-to-br from-lime-500/10 to-lime-600/10 rounded-xl"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-tr from-lime-400/5 via-transparent to-lime-600/10 rounded-xl" />
-                </>
-              )}
-              
-              <motion.div
-                className="absolute inset-0 flex items-center justify-center p-1 sm:p-4"
-                animate={activeTab === "rexo" ? {
-                  filter: [
-                    "drop-shadow(0 0 20px rgba(163, 230, 53, 0.6))",
-                    "drop-shadow(0 0 30px rgba(163, 230, 53, 0.8))",
-                    "drop-shadow(0 0 20px rgba(163, 230, 53, 0.6))"
-                  ]
-                } : {}}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              >
+              <motion.div className="absolute inset-0 flex items-center justify-center p-1 sm:p-4">
                 <video
                   autoPlay
                   muted
@@ -488,7 +514,7 @@ function ScanPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 max-w-3xl mx-auto">
+              <div className="grid grid-cols-3 gap-2 sm:gap-6 max-w-3xl mx-auto mb-6 sm:mb-8">
                 {[
                   {
                     icon: Shield,
@@ -511,93 +537,94 @@ function ScanPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.1 }}
-                    className="group relative overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-lime-400/50 transition-all duration-500"
+                    className="group relative overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3 sm:p-6 hover:bg-white/10 hover:border-lime-400/50 transition-all duration-500"
                   >
-                    <div className="absolute top-0 right-0 w-20 h-20 bg-lime-400/5 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <feature.icon className="w-8 h-8 text-lime-400 mb-3 transition-colors duration-500" strokeWidth={1.5} />
-                    <h3 className="text-base font-semibold text-white mb-2">{feature.title}</h3>
-                    <p className="text-sm text-slate-400 leading-relaxed">{feature.desc}</p>
+                    <div className="absolute top-0 right-0 w-12 h-12 sm:w-20 sm:h-20 bg-lime-400/5 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <feature.icon className="w-5 h-5 sm:w-8 sm:h-8 text-lime-400 mb-2 sm:mb-3 transition-colors duration-500" strokeWidth={1.5} />
+                    <h3 className="text-[11px] sm:text-base font-semibold text-white mb-1 sm:mb-2 leading-tight">{feature.title}</h3>
+                    <p className="text-[9px] sm:text-sm text-slate-400 leading-tight sm:leading-relaxed">{feature.desc}</p>
                   </motion.div>
                 ))}
               </div>
 
-              <div className={`bg-gradient-to-br ${currentTheme.bgGradient} border ${currentTheme.borderColor}/20 rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto transition-all duration-700`}>
-                <h3 className="text-xl font-bold text-white mb-3">Key Features</h3>
-                <ul className="space-y-3">
-                  {[
-                    "Emergency response system with instant alerts",
-                    "Digital identity verification and management",
-                    "Smart safety monitoring and tracking",
-                    "AI-powered threat detection and prevention",
-                    "Integrated emergency services coordination",
-                  ].map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <CheckCircle2 className={`w-5 h-5 ${currentTheme.textColor} flex-shrink-0 mt-0.5 transition-colors duration-500`} />
-                      <span className="text-slate-300 text-sm sm:text-base">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto mb-4">
+                {/* Condensed B2B Section */}
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 sm:p-6 hover:border-lime-400/30 transition-all">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Briefcase className="w-6 h-6 text-lime-400" />
+                    <h3 className="text-lg font-bold text-white">Businesses & Fleets (B2B)</h3>
+                  </div>
+                  <p className="text-slate-300 text-sm mb-4 leading-relaxed">
+                    Safety and accountability at scale. REXU helps transport operators manage driver profiles and improve emergency response from one centralized platform.
+                  </p>
+                  <ul className="space-y-2">
+                    {[
+                      "Central dashboard for fleet visibility",
+                      "Bulk QR safety identities",
+                      "Strengthen workplace accountability",
+                      "Real-time driver assignment",
+                      "Instant emergency tracking",
+                      "Seamless organizational scaling",
+                      "Cost-effective safety management",
+                    ].map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-lime-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-300 text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Condensed D2C Section */}
+                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-5 sm:p-6 hover:border-lime-400/30 transition-all">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Users className="w-6 h-6 text-lime-400" />
+                    <h3 className="text-lg font-bold text-white">Individuals & Families (D2C)</h3>
+                  </div>
+                  <p className="text-slate-300 text-sm mb-4 leading-relaxed">
+                    Your personal digital safety shield. Turn a simple QR into an instant connection to trusted contacts during emergencies without compromising privacy.
+                  </p>
+                  <ul className="space-y-2">
+                    {[
+                      "Instant emergency alerts via QR",
+                      "Share vital medical details securely",
+                      "No tracking or surveillance",
+                      "Protect children & elderly",
+                      "Simple setup in seconds",
+                      "Works with any smartphone camera",
+                      "Peace of mind everywhere",
+                    ].map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <CheckCircle2 className="w-4 h-4 text-lime-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-slate-300 text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
 
-              {/* D2C Section */}
-              <div className={`bg-gradient-to-br ${currentTheme.bgGradient} border ${currentTheme.borderColor}/20 rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto transition-all duration-700`}>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Built for Individuals & Families (D2C)</h3>
-                <h4 className={`text-lg font-semibold ${currentTheme.textColor} mb-4`}>Your personal digital safety shield.</h4>
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
-                  Whether you're commuting to work, traveling alone, riding daily, or caring for loved ones, emergencies can happen without warning. REXU helps people stay prepared by turning a simple QR into an instant connection to trusted support — when it matters most.
-                </p>
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
-                  In an emergency, anyone nearby can scan your REXU QR using any smartphone camera to access critical safety information and notify your trusted contacts — without exposing personal phone numbers or compromising privacy.
-                </p>
-                <h5 className="font-semibold text-white mb-3">REXU helps individuals and families:</h5>
-                <ul className="space-y-3 mb-6">
-                  {[
-                    "Reach trusted contacts faster during emergencies",
-                    "Share important medical or emergency details when needed",
-                    "Stay protected without tracking, surveillance or intrusive monitoring",
-                    "Support elders, children and loved ones with a simple safety layer",
-                    "Carry peace of mind every day, wherever life takes you",
-                  ].map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <CheckCircle2 className={`w-5 h-5 ${currentTheme.textColor} flex-shrink-0 mt-0.5 transition-colors duration-500`} />
-                      <span className="text-slate-300 text-sm sm:text-base">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <p className={`text-slate-300 text-sm sm:text-base leading-relaxed italic border-l-4 ${currentTheme.borderColor} pl-4 py-1`}>
-                  It’s not about fear. It’s about preparedness, care and knowing help is always one scan away.
-                </p>
-              </div>
-
-              {/* B2B Section */}
-              <div className={`bg-gradient-to-br ${currentTheme.bgGradient} border ${currentTheme.borderColor}/20 rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto transition-all duration-700`}>
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Built for Businesses & Fleets (B2B)</h3>
-                <h4 className={`text-lg font-semibold ${currentTheme.textColor} mb-4`}>Safety and accountability at scale.</h4>
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
-                  For logistics companies, transport operators, workplaces and commercial fleets, safety is more than responsibility — it’s operational reliability. REXU helps organizations create faster emergency response systems while simplifying fleet visibility and driver accountability.
-                </p>
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
-                  From vehicle safety to workforce protection, REXU enables businesses to assign drivers, manage QR-based safety profiles and improve response during critical situations — all through one centralized platform.
-                </p>
-                <h5 className="font-semibold text-white mb-3">REXU helps businesses:</h5>
-                <ul className="space-y-3 mb-6">
-                  {[
-                    "Manage multiple vehicles and drivers from one dashboard",
-                    "Assign drivers to vehicles on a daily basis",
-                    "Generate QR safety identities in bulk",
-                    "Improve emergency response during incidents",
-                    "Strengthen workplace and fleet accountability",
-                    "Protect people and assets without operational complexity",
-                  ].map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <CheckCircle2 className={`w-5 h-5 ${currentTheme.textColor} flex-shrink-0 mt-0.5 transition-colors duration-500`} />
-                      <span className="text-slate-300 text-sm sm:text-base">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-                <p className={`text-slate-300 text-sm sm:text-base leading-relaxed italic border-l-4 ${currentTheme.borderColor} pl-4 py-1`}>
-                  Built to scale with your organization, REXU helps businesses operate with greater confidence, care and responsibility.
-                </p>
+              <div className="max-w-4xl mx-auto space-y-4">
+                <RexuAccordionCard
+                  icon={Zap}
+                  title="Key Features"
+                  subtitle="Smart safety monitoring, digital identity, and rapid response systems."
+                  index={0}
+                >
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      "Emergency response system with instant alerts",
+                      "Digital identity verification and management",
+                      "Smart safety monitoring and tracking",
+                      "AI-powered threat detection and prevention",
+                      "Integrated emergency services coordination",
+                    ].map((feature, idx) => (
+                      <li key={idx} className="flex items-start gap-3">
+                        <CheckCircle2 className="w-5 h-5 text-lime-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-sm">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </RexuAccordionCard>
               </div>
 
               <div className="flex justify-center pt-4">
@@ -616,6 +643,12 @@ function ScanPage() {
             </motion.section>
           )}
         </AnimatePresence>
+
+        <div className="pt-8 pb-4 text-center max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-slate-400 leading-relaxed bg-white/5 border border-white/10 rounded-xl p-4 sm:p-6 backdrop-blur-sm">
+            For further inquiries or collaboration opportunities, please feel free to reach out via <strong className="text-white font-medium">Phone</strong>, <strong className="text-white font-medium">Email</strong>, <strong className="text-white font-medium">WhatsApp</strong>, or connect on <strong className="text-white font-medium">LinkedIn</strong>.
+          </p>
+        </div>
       </main>
 
       <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
