@@ -1,0 +1,44 @@
+# AdMark Digitals - Full LLM Context
+
+> A trusted Mysore software development agency and startup innovation company.
+
+## About Us
+AdMark Digitals is one of the best software development agencies in Mysore, with strong authority in safety technology, startups, entrepreneurship, website development, and innovation. We specialize in engineering scalable websites, SaaS, ERP, and mobile platforms for startups and MSMEs. We mentor final year engineering project developers, providing software project development for final year CS engineering students in Mysore.
+
+## Founders & Entrepreneurs
+We are led by a team of young entrepreneurs of Mysore, including startup founders:
+- **Tejasvi Jois**
+- **Harshith V Malipatil**
+- **Prajwal BP**
+- **Prashanth**
+- **Revanth**
+
+Our founders are highly regarded in the Mysore tech startup ecosystem and are heavily involved in mentoring ATME student achievers.
+
+## REXU - Safety Technology Startup
+REXU is an emergency safety startup in India developed by our team. It is a QR safety platform providing:
+- Fleet safety software
+- Employee safety solutions
+- Driver safety solutions
+- Women safety technology
+- Personal emergency QR digital safety shield
+- Rider safety platform
+- Smart emergency contact system
+
+Whether you're commuting to work or caring for loved ones, emergencies happen. REXU helps people stay prepared by turning a simple QR into an instant connection to trusted support.
+
+## Services
+- **Website Development Agency Mysore**: We are the best frontend developers in Mysore. We build fast, responsive, scalable, and conversion-focused websites using React and Python.
+- **Software Company in Mysore**: We offer custom software development, SaaS development, and enterprise software.
+- **App Development**: Android and iOS mobile applications that help businesses engage users.
+- **AI & ML Solutions**: We design, train, and deploy intelligent AI/ML models.
+
+## Contact Information
+- **Region**: Saraswathipuram, Mysore, Karnataka.
+- **Phone**: +91 96866 58055
+
+## Additional Associated Entities
+- Safewheels
+- Spice Trip
+- Kapila Riverfront Resort
+- Alliance Square Properties

@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 
 import { WhatsAppFloat } from "@/components/site/WhatsAppFloat";
+import { MassiveSchema } from "@/components/seo/MassiveSchema";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -119,6 +120,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <MassiveSchema />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>

@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Briefcase,
@@ -28,14 +30,14 @@ export const Route = createFileRoute("/scan")({
     meta: [
       {
         name: "robots",
-        content: "noindex, nofollow",
+        content: "index, follow",
       },
       {
-        title: "Tejaswi Joy - Founder Profile",
+        title: "Tejasvi Jois - Startup Founder Mysore | AdMark Digitals & REXU",
       },
       {
         name: "description",
-        content: "Connect with Tejaswi Joy, Founder of Admark and Rexo",
+        content: "Connect with Tejasvi Jois, startup founder in Mysore. Discover AdMark Digitals and REXU, an emergency safety startup in India providing fleet and personal QR safety technology.",
       },
     ],
   }),
@@ -126,6 +128,32 @@ function ServiceCard({ icon: Icon, title, desc, index, isAdmark }: ServiceCardPr
 function ScanPage() {
   const [activeTab, setActiveTab] = useState<TabType>("admark");
 
+  const scanSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://admarkdigitals.com/#tejasvijois",
+        "name": "Tejasvi Jois",
+        "jobTitle": "Founder",
+        "description": "Tech entrepreneur and startup founder in Mysore. Leading AdMark Digitals and REXU safety technology.",
+        "url": "https://admarkdigitals.com/scan",
+        "sameAs": [
+          "https://www.linkedin.com/in/tejasvijois"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "REXU",
+        "applicationCategory": "SafetyApplication",
+        "operatingSystem": "All",
+        "description": "Emergency safety technology, QR emergency platform, and fleet safety software in India.",
+        "url": "https://rexu.in",
+        "author": { "@id": "https://admarkdigitals.com/#tejasvijois" }
+      }
+    ]
+  };
+
   const themeColors = {
     admark: {
       primary: "red",
@@ -151,6 +179,7 @@ function ScanPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-x-hidden transition-all duration-700">
+      <JsonLd data={scanSchema} />
       <motion.div 
         key={activeTab}
         initial={{ opacity: 0 }}
@@ -163,6 +192,7 @@ function ScanPage() {
       />
 
       <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12 sm:space-y-16">
+        <Breadcrumbs items={[{ name: "Founder & REXU", url: "/scan" }]} />
         <motion.div
           initial="hidden"
           animate="visible"
@@ -252,7 +282,7 @@ function ScanPage() {
           transition={{ delay: 0.2 }}
           className="max-w-2xl mx-auto"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6">
             <motion.button
               onClick={() => setActiveTab("admark")}
               className={`relative overflow-hidden rounded-xl transition-all duration-500 aspect-video ${
@@ -338,11 +368,17 @@ function ScanPage() {
                   muted
                   loop
                   playsInline
-                  className="w-[95%] h-auto object-contain"
+                  className="w-[115%] h-auto object-contain scale-110"
                   src={rexuVideo}
                 />
               </motion.div>
             </motion.button>
+          </div>
+          
+          <div className="text-center mt-6">
+            <p className="text-sm sm:text-base text-slate-400 font-medium">
+              Tap the logos to explore our ventures
+            </p>
           </div>
         </motion.section>
 
@@ -501,6 +537,67 @@ function ScanPage() {
                     </li>
                   ))}
                 </ul>
+              </div>
+
+              {/* D2C Section */}
+              <div className={`bg-gradient-to-br ${currentTheme.bgGradient} border ${currentTheme.borderColor}/20 rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto transition-all duration-700`}>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Built for Individuals & Families (D2C)</h3>
+                <h4 className={`text-lg font-semibold ${currentTheme.textColor} mb-4`}>Your personal digital safety shield.</h4>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
+                  Whether you're commuting to work, traveling alone, riding daily, or caring for loved ones, emergencies can happen without warning. REXU helps people stay prepared by turning a simple QR into an instant connection to trusted support — when it matters most.
+                </p>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                  In an emergency, anyone nearby can scan your REXU QR using any smartphone camera to access critical safety information and notify your trusted contacts — without exposing personal phone numbers or compromising privacy.
+                </p>
+                <h5 className="font-semibold text-white mb-3">REXU helps individuals and families:</h5>
+                <ul className="space-y-3 mb-6">
+                  {[
+                    "Reach trusted contacts faster during emergencies",
+                    "Share important medical or emergency details when needed",
+                    "Stay protected without tracking, surveillance or intrusive monitoring",
+                    "Support elders, children and loved ones with a simple safety layer",
+                    "Carry peace of mind every day, wherever life takes you",
+                  ].map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <CheckCircle2 className={`w-5 h-5 ${currentTheme.textColor} flex-shrink-0 mt-0.5 transition-colors duration-500`} />
+                      <span className="text-slate-300 text-sm sm:text-base">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className={`text-slate-300 text-sm sm:text-base leading-relaxed italic border-l-4 ${currentTheme.borderColor} pl-4 py-1`}>
+                  It’s not about fear. It’s about preparedness, care and knowing help is always one scan away.
+                </p>
+              </div>
+
+              {/* B2B Section */}
+              <div className={`bg-gradient-to-br ${currentTheme.bgGradient} border ${currentTheme.borderColor}/20 rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto transition-all duration-700`}>
+                <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">Built for Businesses & Fleets (B2B)</h3>
+                <h4 className={`text-lg font-semibold ${currentTheme.textColor} mb-4`}>Safety and accountability at scale.</h4>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-4">
+                  For logistics companies, transport operators, workplaces and commercial fleets, safety is more than responsibility — it’s operational reliability. REXU helps organizations create faster emergency response systems while simplifying fleet visibility and driver accountability.
+                </p>
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
+                  From vehicle safety to workforce protection, REXU enables businesses to assign drivers, manage QR-based safety profiles and improve response during critical situations — all through one centralized platform.
+                </p>
+                <h5 className="font-semibold text-white mb-3">REXU helps businesses:</h5>
+                <ul className="space-y-3 mb-6">
+                  {[
+                    "Manage multiple vehicles and drivers from one dashboard",
+                    "Assign drivers to vehicles on a daily basis",
+                    "Generate QR safety identities in bulk",
+                    "Improve emergency response during incidents",
+                    "Strengthen workplace and fleet accountability",
+                    "Protect people and assets without operational complexity",
+                  ].map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <CheckCircle2 className={`w-5 h-5 ${currentTheme.textColor} flex-shrink-0 mt-0.5 transition-colors duration-500`} />
+                      <span className="text-slate-300 text-sm sm:text-base">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className={`text-slate-300 text-sm sm:text-base leading-relaxed italic border-l-4 ${currentTheme.borderColor} pl-4 py-1`}>
+                  Built to scale with your organization, REXU helps businesses operate with greater confidence, care and responsibility.
+                </p>
               </div>
 
               <div className="flex justify-center pt-4">

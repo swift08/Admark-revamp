@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
 import heroVideo from "@/assets/hero-video - Trim.mp4";
@@ -35,17 +37,17 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "AdMark Digitals: Research-led digital infrastructure for startups & MSMEs" },
+      { title: "Best Software Development Agency in Mysore | AdMark Digitals" },
       {
         name: "description",
         content:
-          "AdMark Digitals engineers conversion-focused websites, scalable SaaS, custom ERP and research-backed digital systems. Mysore · Bangalore · Hyderabad.",
+          "Top software company in Mysore offering custom software development, website development, React, and Python solutions. Led by innovative startup founders in Saraswathipuram.",
       },
-      { property: "og:title", content: "AdMark Digitals: Growth Architects" },
+      { property: "og:title", content: "AdMark Digitals: Top Software Company in Mysore" },
       {
         property: "og:description",
         content:
-          "Research-first agency building digital infrastructure for 25+ businesses across 9 industries.",
+          "Research-first agency building digital infrastructure for startups and MSMEs. We mentor final year engineering project developers.",
       },
       { property: "og:type", content: "website" },
     ],
@@ -148,10 +150,48 @@ const LEADERSHIP = [
 // ──────────────────────────────────────────────────────────────────────────
 
 function Home() {
+  const homeSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "AdMark Digitals",
+    "url": "https://admarkdigitals.com/",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://admarkdigitals.com/search?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const founderSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://admarkdigitals.com/#tejasvijois",
+        "name": "Tejasvi Jois",
+        "jobTitle": "Founder & CEO",
+        "worksFor": { "@id": "https://admarkdigitals.com/#organization" },
+        "alumniOf": { "@type": "EducationalOrganization", "name": "ATME College of Engineering" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://admarkdigitals.com/#harshith",
+        "name": "Harshith V Malipatil",
+        "jobTitle": "Co-founder & COO",
+        "worksFor": { "@id": "https://admarkdigitals.com/#organization" },
+        "alumniOf": { "@type": "EducationalOrganization", "name": "ATME College of Engineering" }
+      }
+    ]
+  };
+
   return (
     <div className="relative min-h-screen bg-background text-foreground font-body overflow-x-clip">
+      <JsonLd data={[homeSchema, founderSchema]} />
       <BackgroundGrid />
       <SiteHeader />
+      <div className="site-container pt-[4.25rem] pb-0 -mb-[4.25rem] relative z-20">
+        <Breadcrumbs items={[]} />
+      </div>
       <Hero />
       <ClientStrip />
       <Services />
@@ -235,15 +275,14 @@ function Hero() {
           <div className="flex h-svh w-full flex-col justify-end pt-[4.25rem] max-sm:pb-8 sm:pb-0">
             <div className="site-container max-w-5xl pb-24 sm:pb-12 md:pb-16">
               <p className="text-xs sm:text-sm text-brand-silver mb-4 max-w-md">
-                Research-led studio · Est. 2024
+                Trusted Mysore Tech Startup · Est. 2024
               </p>
 
               <HeroHeadline className="font-display text-[clamp(1.75rem,4.25vw,3.75rem)] font-bold leading-[1.05] tracking-tight text-balance max-w-2xl mb-4 sm:mb-5 text-foreground" />
 
               <div className="grid md:grid-cols-[minmax(0,22rem)_1fr] gap-6 md:gap-10 items-end">
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-pretty max-w-md">
-                  We build websites, SaaS, ERP and mobile products for startups and MSMEs, scoped
-                  from research, shipped with clear metrics, not decorative deliverables.
+                  We are the best software development agency in Mysore, building websites, SaaS, ERP, and mobile products. Expert frontend developers mentoring final year engineering projects for CS students.
                 </p>
                 <div className="flex flex-wrap items-center gap-4 md:justify-end">
                   <a
@@ -481,8 +520,8 @@ function Founders() {
       <div className="site-container">
         <SectionHeader index="05" eyebrow="Leadership" />
         <h2 className="type-section-title mb-8 max-w-3xl">
-          Built by operators.
-          <span className="text-muted-foreground"> Run by engineers.</span>
+          Young entrepreneurs of Mysore.
+          <span className="text-muted-foreground"> Built by operators, run by engineers.</span>
         </h2>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border-dim border border-border-dim">
