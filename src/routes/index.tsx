@@ -1,18 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, lazy, Suspense } from "react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
-import { GridScan } from "@/components/site/GridScan";
+const GridScan = lazy(() => import("@/components/site/GridScan").then(m => ({ default: m.GridScan })));
 import tejasvi from "@/assets/team-tejasvi.webp";
-import harshith from "@/assets/team-harshith.png";
-import prajwal from "@/assets/team-prajwal.png";
-import revanth from "@/assets/team-revanth.png";
-import { BackgroundGrid } from "@/components/site/BackgroundGrid";
-import { Marquee } from "@/components/site/Marquee";
+import harshith from "@/assets/team-harshith.webp";
+import prajwal from "@/assets/team-prajwal.webp";
+import revanth from "@/assets/team-revanth.webp";
 import { Faq } from "@/components/site/Faq";
 import { FooterTagline } from "@/components/site/ScrollReveal";
+import { BackgroundGrid } from "@/components/site/BackgroundGrid";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { ServiceGroupCard } from "@/components/site/ServiceGroupCard";
 import { CountUp } from "@/components/site/CountUp";
@@ -34,6 +33,7 @@ import {
   CONTACT_WHATSAPP_DISPLAY,
   CONTACT_WHATSAPP_URL,
 } from "@/lib/contact";
+import { Marquee } from "@/components/site/Marquee";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -219,18 +219,20 @@ function Hero() {
         <div className="col-start-1 row-start-1 sticky top-0 z-0 h-svh w-full self-start overflow-hidden">
           <div className="absolute inset-0 z-0 bg-background">
             <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-              <GridScan
-                sensitivity={0.55}
-                lineThickness={1}
-                linesColor="#2F293A"
-                gridScale={0.1}
-                scanColor="#EF4444"
-                scanOpacity={0.4}
-                enablePost
-                bloomIntensity={0.6}
-                chromaticAberration={0.002}
-                noiseIntensity={0.01}
-              />
+              <Suspense fallback={<div className="absolute inset-0 bg-background" />}>
+                <GridScan
+                  sensitivity={0.55}
+                  lineThickness={1}
+                  linesColor="#2F293A"
+                  gridScale={0.1}
+                  scanColor="#EF4444"
+                  scanOpacity={0.4}
+                  enablePost
+                  bloomIntensity={0.6}
+                  chromaticAberration={0.002}
+                  noiseIntensity={0.01}
+                />
+              </Suspense>
             </div>
           </div>
           {/* Black gradient layers over video */}
@@ -456,31 +458,31 @@ function Work() {
 
 function Industries() {
   return (
-<section className="py-10 md:py-14 border-b border-border-dim">
-  <div className="site-container">
-    <SectionHeader index="04" eyebrow="Sectors Served" />
-    <h2 className="type-section-title mb-8 max-w-3xl">
-      Versatile by design.
-      <span className="text-muted-foreground"> Industry-agnostic by architecture.</span>
-    </h2>
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-      {INDUSTRIES.map((ind, i) => (
-        <div
-          key={ind}
-          className="bg-background flex items-center justify-between gap-3 p-4 sm:p-5 md:p-6 border border-border-bright rounded-2xl md:rounded-3xl"
-        >
-          <span className="font-display text-xl sm:text-2xl md:text-3xl font-medium min-w-0 text-pretty">
-            {ind}
-          </span>
-          <span className="font-mono text-sm text-brand-red transition-colors shrink-0">
-            / {String(i + 1).padStart(2, "0")}
-          </span>
+    <section className="py-10 md:py-14 border-b border-border-dim">
+      <div className="site-container">
+        <SectionHeader index="04" eyebrow="Sectors Served" />
+        <h2 className="type-section-title mb-8 max-w-3xl">
+          Versatile by design.
+          <span className="text-muted-foreground"> Industry-agnostic by architecture.</span>
+        </h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          {INDUSTRIES.map((ind, i) => (
+            <div
+              key={ind}
+              className="bg-background flex items-center justify-between gap-3 p-4 sm:p-5 md:p-6 border border-border-bright rounded-2xl md:rounded-3xl"
+            >
+              <span className="font-display text-xl sm:text-2xl md:text-3xl font-medium min-w-0 text-pretty">
+                {ind}
+              </span>
+              <span className="font-mono text-sm text-brand-red transition-colors shrink-0">
+                / {String(i + 1).padStart(2, "0")}
+              </span>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  </div>
-</section>
-      
+      </div>
+    </section>
+
   );
 }
 

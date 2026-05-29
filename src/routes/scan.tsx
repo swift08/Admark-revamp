@@ -22,7 +22,7 @@ import {
   Mail,
 } from "lucide-react";
 import logo from "@/assets/logo-admark.webp";
-import rexuLogo from "@/assets/WhatsApp_Image_2026-05-28_at_2.42.07_PM-removebg-preview.png";
+import rexuLogo from "@/assets/WhatsApp_Image_2026-05-28_at_2.42.07_PM-removebg-preview.webp";
 import rexuVideo from "@/assets/Rexu.mp4";
 import ceoImg from "@/assets/ceo TEAM MEMBERS.webp";
 

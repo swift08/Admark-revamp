@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import logo from "@/assets/logo-admark.webp";
 import { SiteContainer } from "@/components/site/SiteContainer";
@@ -53,11 +53,19 @@ export function SiteHeader() {
         )}
       >
         <SiteContainer className="flex min-h-[6rem] py-2 items-center justify-between gap-4">
-          <Link
-            to="/"
-            className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
-            onClick={closeMenu}
-          >
+<Link
+             to="/"
+             className="group flex min-w-0 items-center gap-2.5 sm:gap-3"
+             onClick={(e: React.MouseEvent) => {
+               closeMenu();
+               const currentPath = useRouterState({ select: (s) => s.location.pathname });
+               if (currentPath === "/") {
+                 e.preventDefault();
+                 const hero = document.getElementById("top");
+                 hero?.scrollIntoView({ behavior: "smooth" });
+               }
+             }}
+           >
             <img
               src={logo}
               alt="AdMark Digitals"

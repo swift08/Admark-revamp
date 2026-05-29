@@ -10,6 +10,7 @@ import {
 
 import { WhatsAppFloat } from "@/components/site/WhatsAppFloat";
 import { MassiveSchema } from "@/components/seo/MassiveSchema";
+import logoAdmark from "@/assets/logo-admark.webp";
 import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
@@ -35,7 +36,6 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
   const router = useRouter();
 
   return (
@@ -87,8 +87,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "icon", type: "image/webp", href: "/favicon.webp" },
       { rel: "stylesheet", href: appCss },
+      { rel: "preload", href: logoAdmark, as: "image", type: "image/webp" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
+      {
+        rel: "preload",
+        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
+        as: "style"
+      },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
