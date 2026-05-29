@@ -24,7 +24,7 @@ import { WorkTeaser } from "@/components/site/WorkGrid";
 import { CAREER_OPENINGS } from "@/data/careers";
 import { SERVICE_GROUPS } from "@/data/services";
 import { CASE_STUDIES, FEATURED_PROJECT } from "@/data/work";
-import ScrollStack, { ScrollStackItem } from "@/components/site/ScrollStack";
+
 import {
   CONTACT_EMAIL,
   CONTACT_PHONE_DISPLAY,
@@ -456,36 +456,31 @@ function Work() {
 
 function Industries() {
   return (
-    <section className="py-10 md:py-14 border-b border-border-dim">
-      <div className="site-container">
-        <SectionHeader index="04" eyebrow="Sectors Served" />
-        <h2 className="type-section-title mb-8 max-w-3xl">
-          Versatile by design.
-          <span className="text-muted-foreground"> Industry-agnostic by architecture.</span>
-        </h2>
-        <div style={{ height: "400px", position: "relative" }} className="-mx-5 px-5 md:mx-0 md:px-0">
-          <ScrollStack
-            itemDistance={20}
-            itemScale={0.03}
-            stackPosition="15%"
-          >
-            {INDUSTRIES.map((ind, i) => (
-              <ScrollStackItem
-                key={ind}
-                itemClassName="bg-background flex items-center justify-between gap-3 p-4 sm:p-5 md:p-6 border border-border-bright rounded-2xl md:rounded-3xl"
-              >
-                <span className="font-display text-xl sm:text-2xl md:text-3xl font-medium min-w-0 text-pretty">
-                  {ind}
-                </span>
-                <span className="font-mono text-sm text-brand-red transition-colors shrink-0">
-                  / {String(i + 1).padStart(2, "0")}
-                </span>
-              </ScrollStackItem>
-            ))}
-          </ScrollStack>
+<section className="py-10 md:py-14 border-b border-border-dim">
+  <div className="site-container">
+    <SectionHeader index="04" eyebrow="Sectors Served" />
+    <h2 className="type-section-title mb-8 max-w-3xl">
+      Versatile by design.
+      <span className="text-muted-foreground"> Industry-agnostic by architecture.</span>
+    </h2>
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+      {INDUSTRIES.map((ind, i) => (
+        <div
+          key={ind}
+          className="bg-background flex items-center justify-between gap-3 p-4 sm:p-5 md:p-6 border border-border-bright rounded-2xl md:rounded-3xl"
+        >
+          <span className="font-display text-xl sm:text-2xl md:text-3xl font-medium min-w-0 text-pretty">
+            {ind}
+          </span>
+          <span className="font-mono text-sm text-brand-red transition-colors shrink-0">
+            / {String(i + 1).padStart(2, "0")}
+          </span>
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
+  </div>
+</section>
+      
   );
 }
 
