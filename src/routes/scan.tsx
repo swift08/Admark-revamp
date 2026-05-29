@@ -1,12 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Phone,
-  MessageCircle,
-  Globe,
-  Mail,
-  ArrowRight,
   Briefcase,
   Code,
   Smartphone,
@@ -17,13 +12,15 @@ import {
   Users,
   CheckCircle2,
   ExternalLink,
+  Target,
+  Zap,
+  Shield,
   ChevronDown,
-  Linkedin,
+  MessageSquare,
 } from "lucide-react";
 import logo from "@/assets/logo-admark.webp";
-import rexuVideo from "@/assets/Rexu.mp4";
 import rexuLogo from "@/assets/WhatsApp_Image_2026-05-28_at_2.42.07_PM-removebg-preview.png";
-
+import rexuVideo from "@/assets/Rexu.mp4";
 import ceoImg from "@/assets/ceo TEAM MEMBERS.webp";
 
 export const Route = createFileRoute("/scan")({
@@ -34,12 +31,11 @@ export const Route = createFileRoute("/scan")({
         content: "noindex, nofollow",
       },
       {
-        title: "Welcome to AdMark Digitals",
+        title: "Tejaswi Joy - Founder Profile",
       },
       {
         name: "description",
-        content:
-          "AdMark Digitals is a research-first digital solutions company helping businesses establish, scale, and modernize their digital presence.",
+        content: "Connect with Tejaswi Joy, Founder of Admark and Rexo",
       },
     ],
   }),
@@ -48,592 +44,508 @@ export const Route = createFileRoute("/scan")({
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
 } as const;
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.9 },
+  visible: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: "easeOut" } },
 } as const;
 
-function ServiceCard({
-  icon: Icon,
-  title,
-  desc,
-  note,
-}: {
+type TabType = "admark" | "rexo";
+
+interface ServiceCardProps {
   icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
   title: string;
   desc: string;
-  note?: string;
-}) {
+  index: number;
+}
+
+function ServiceCard({ icon: Icon, title, desc, index, isAdmark }: ServiceCardProps & { isAdmark: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
+
   return (
     <motion.div
-      variants={fadeInUp}
-      className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-red-500/50 transition-colors flex flex-col cursor-pointer"
-      onClick={() => setIsOpen(!isOpen)}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.05 }}
+      className={`group relative overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-500 ${
+        isAdmark ? "hover:border-red-500/50" : "hover:border-lime-400/50"
+      }`}
     >
-      <div className="flex items-center justify-between mb-5">
-        <Icon className="w-8 h-8 text-red-500" strokeWidth={1.5} />
-        <ChevronDown
-          className={`w-5 h-5 text-zinc-500 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
-        />
-      </div>
-      <h3 className="text-lg font-semibold text-white">{title}</h3>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full p-4 sm:p-5 text-left"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3 flex-1 min-w-0">
+            <Icon 
+              className={`w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0 mt-0.5 transition-colors duration-500 ${
+                isAdmark ? "text-red-400" : "text-lime-400"
+              }`} 
+              strokeWidth={1.5} 
+            />
+            <div className="flex-1 min-w-0">
+              <h3 className="text-sm sm:text-base font-semibold text-white mb-1">{title}</h3>
+              {!isOpen && (
+                <p className="text-xs sm:text-sm text-slate-400 line-clamp-1">{desc}</p>
+              )}
+            </div>
+          </div>
+          <ChevronDown
+            className={`w-5 h-5 text-slate-400 flex-shrink-0 transition-transform duration-300 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+      </button>
+      
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0, marginTop: 0 }}
-            animate={{ height: "auto", opacity: 1, marginTop: 8 }}
-            exit={{ height: 0, opacity: 0, marginTop: 0 }}
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
             className="overflow-hidden"
           >
-            <p className="text-zinc-400 text-sm leading-relaxed">{desc}</p>
-            {note && (
-              <span className="inline-block mt-4 text-xs font-medium text-red-400 bg-red-400/10 px-2 py-1 rounded w-fit">
-                {note}
-              </span>
-            )}
+            <div className="px-4 sm:px-5 pb-4 sm:pb-5">
+              <p className="text-sm text-slate-300 leading-relaxed pl-9">{desc}</p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
+      
+      <div className={`absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
+        isAdmark ? "bg-red-500/5" : "bg-lime-400/5"
+      }`} />
     </motion.div>
   );
 }
 
 function ScanPage() {
-  const rexuVideoRef = useRef<HTMLVideoElement>(null);
+  const [activeTab, setActiveTab] = useState<TabType>("admark");
 
-  useEffect(() => {
-    const video = rexuVideoRef.current;
-    if (!video) return;
+  const themeColors = {
+    admark: {
+      primary: "red",
+      bgGradient: "from-red-500/10 to-red-600/10",
+      borderColor: "border-red-500",
+      textColor: "text-red-400",
+      btnBg: "bg-red-600 hover:bg-red-700",
+      shadowColor: "shadow-[0_0_30px_rgba(239,68,68,0.3)]",
+      radialBg: "rgba(239,68,68,0.15)",
+    },
+    rexo: {
+      primary: "lime",
+      bgGradient: "from-lime-500/10 to-lime-600/10",
+      borderColor: "border-lime-400",
+      textColor: "text-lime-400",
+      btnBg: "bg-lime-400 hover:bg-lime-300 text-black",
+      shadowColor: "shadow-[0_0_30px_rgba(163,230,53,0.3)]",
+      radialBg: "rgba(163,230,53,0.15)",
+    },
+  };
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
-      video.pause();
-      video.removeAttribute("autoplay");
-      return;
-    }
-
-    video.muted = true;
-    void video.play().catch(() => {
-      /* autoplay may be blocked */
-    });
-  }, []);
+  const currentTheme = themeColors[activeTab];
 
   return (
-    <div className="min-h-screen bg-black text-zinc-100 selection:bg-red-500/30 selection:text-red-200 overflow-x-hidden">
-      {/* Background Red Gradient */}
-      <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-red-600/10 blur-[150px] rounded-full pointer-events-none" />
-      <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-red-900/10 blur-[150px] rounded-full pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white overflow-x-hidden transition-all duration-700">
+      <motion.div 
+        key={activeTab}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.7 }}
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at 30% 20%, ${currentTheme.radialBg}, transparent 50%), radial-gradient(circle at 70% 80%, ${currentTheme.radialBg}, transparent 50%)`
+        }}
+      />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-12 sm:py-16 md:py-24 relative z-10 space-y-16 sm:space-y-24">
-        {/* Header / Logo */}
+      <main className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12 sm:space-y-16">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex justify-center mb-12"
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="flex items-center justify-center gap-8 sm:gap-12 pt-4"
         >
-          <img src={logo} alt="AdMark Digitals Logo" className="h-24 sm:h-32 object-contain" />
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="transition-all duration-500"
+            style={{
+              filter: activeTab === "admark" 
+                ? "drop-shadow(0 0 20px rgba(239, 68, 68, 0.6)) drop-shadow(0 0 40px rgba(239, 68, 68, 0.4))" 
+                : "drop-shadow(0 10px 25px rgba(0, 0, 0, 0.5))"
+            }}
+          >
+            <img src={logo} alt="Admark Logo" className="h-28 sm:h-36 md:h-40 w-auto object-contain" />
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="transition-all duration-500"
+            style={{
+              filter: activeTab === "rexo" 
+                ? "drop-shadow(0 0 20px rgba(163, 230, 53, 0.6)) drop-shadow(0 0 40px rgba(163, 230, 53, 0.4))" 
+                : "drop-shadow(0 10px 25px rgba(0, 0, 0, 0.5))"
+            }}
+          >
+            <img src={rexuLogo} alt="Rexu Logo" className="h-28 sm:h-36 md:h-40 w-auto object-contain" />
+          </motion.div>
         </motion.div>
 
-        {/* Section 1: Hero */}
         <motion.section
           initial="hidden"
           animate="visible"
-          variants={staggerContainer}
-          className="text-center space-y-8"
+          variants={scaleIn}
+          className="max-w-2xl mx-auto"
         >
-          <motion.div variants={fadeInUp}>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl font-display font-bold tracking-tight text-white mb-4 sm:mb-6 px-2">
-              Welcome to AdMark Digitals
-            </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-zinc-300 max-w-3xl mx-auto leading-relaxed font-light px-2">
-              Thank you for connecting with us. We help businesses grow through branding, websites,
-              technology, AI, automation, printing, and digital transformation.
-            </p>
-          </motion.div>
-
-          <motion.div variants={fadeInUp} className="text-xl font-medium text-red-500">
-            One Partner. Endless Possibilities.
-          </motion.div>
-
-          <motion.div
-            variants={fadeInUp}
-            className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4 pt-4 w-full max-w-lg sm:max-w-none mx-auto px-2"
-          >
-            <a
-              href="tel:9686658055"
-              className="flex w-full sm:w-auto items-center justify-center gap-2 bg-white text-black px-6 sm:px-8 py-3.5 rounded-md font-semibold hover:bg-zinc-200 transition-colors"
-            >
-              <Phone size={20} />
-              Call Us
-            </a>
-            <a
-              href="https://wa.me/919686658055"
-              target="_blank"
-              rel="noreferrer"
-              className="flex w-full sm:w-auto items-center justify-center gap-2 bg-red-600 text-white px-6 sm:px-8 py-3.5 rounded-md font-semibold hover:bg-red-700 transition-colors"
-            >
-              <MessageCircle size={20} />
-              WhatsApp
-            </a>
-            <a
-              href="https://admarkdigitals.com"
-              target="_blank"
-              rel="noreferrer"
-              className="flex w-full sm:w-auto items-center justify-center gap-2 bg-zinc-800 text-white px-6 sm:px-8 py-3.5 rounded-md font-semibold hover:bg-zinc-700 transition-colors"
-            >
-              <Globe size={20} />
-              Visit Website
-            </a>
-          </motion.div>
-        </motion.section>
-
-        {/* Priority Section: About REXU */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={staggerContainer}
-          className="space-y-8"
-        >
-          <motion.div
-            variants={fadeInUp}
-            className="relative overflow-hidden flex flex-col md:flex-row items-center md:items-start gap-6 sm:gap-8 text-left p-5 sm:p-8 md:p-12 rounded-2xl sm:rounded-[24px] min-h-[320px] sm:min-h-[300px]"
-            style={{
-              border: "1px solid rgba(163,230,53,0.2)",
-              boxShadow:
-                "0 10px 40px rgba(0,0,0,0.45), 0 0 40px rgba(163,230,53,0.12), inset 0 1px 0 rgba(163,230,53,0.08)",
-            }}
-          >
-            <video
-              ref={rexuVideoRef}
-              className="absolute inset-0 h-full w-full object-cover"
-              src={rexuVideo}
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-hidden
-              suppressHydrationWarning
-            />
-            <div
-              className="pointer-events-none absolute inset-0 bg-black/75 sm:bg-black/70"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(5,6,10,0.92)_0%,rgba(11,15,26,0.82)_35%,rgba(17,24,39,0.78)_70%,rgba(10,14,22,0.92)_100%)] sm:bg-[linear-gradient(135deg,rgba(5,6,10,0.88)_0%,rgba(11,15,26,0.78)_35%,rgba(17,24,39,0.72)_70%,rgba(10,14,22,0.88)_100%)]"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute -right-6 -bottom-6 sm:-right-8 sm:-bottom-8 h-32 w-32 sm:h-48 sm:w-48 opacity-[0.07] blur-[1px]"
-              aria-hidden
-            >
-              <img src={rexuLogo} alt="" className="h-full w-full object-contain" />
-            </div>
-            <div className="relative z-10 flex-shrink-0 w-full flex justify-center md:w-auto md:justify-start">
-              <div className="rounded-2xl border border-lime-400/25 p-3 sm:p-4 shadow-[0_0_32px_rgba(163,230,53,0.18)]">
-                <img
-                  src={rexuLogo}
-                  alt="REXU"
-                  width={220}
-                  height={96}
-                  className="h-16 sm:h-20 md:h-24 w-auto max-w-[min(220px,70vw)] object-contain drop-shadow-[0_0_16px_rgba(163,230,53,0.4)]"
-                />
+          <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl">
+            <div className="flex flex-col sm:flex-row items-center gap-6">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden border-4 border-white/20 shadow-xl flex-shrink-0">
+                <img src={ceoImg} alt="Tejaswi Joy" className="w-full h-full object-cover" />
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">Tejasvi Jois</h1>
+                <p className="text-slate-300 font-medium mb-4">Founder</p>
+                <div className="flex items-center justify-center sm:justify-start gap-3">
+                  <a
+                    href="https://wa.me/919686658055"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-11 h-11 rounded-full bg-[#25D366] hover:bg-[#128C7E] flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-[#25D366]/50"
+                    aria-label="WhatsApp"
+                  >
+                    <svg className="w-6 h-6" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                    </svg>
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/in/tejasvijois"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-11 h-11 rounded-full bg-[#0A66C2] hover:bg-[#004182] flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-[#0A66C2]/50"
+                    aria-label="LinkedIn"
+                  >
+                    <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                  </a>
+                  <a
+                    href="tel:9686658055"
+                    className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg hover:shadow-blue-500/50"
+                    aria-label="Call"
+                  >
+                    <svg className="w-5 h-5" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+                    </svg>
+                  </a>
+                </div>
               </div>
             </div>
-            <div className="relative z-10 flex-1 w-full min-w-0 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-3 mb-2">
-                <span className="bg-lime-400/15 text-lime-300 text-xs font-bold px-2.5 py-1 rounded uppercase tracking-wider border border-lime-400/20">
-                  Priority Initiative
-                </span>
-              </div>
-              <p className="text-zinc-100 sm:text-zinc-200 text-base sm:text-lg leading-relaxed mb-6 max-w-3xl drop-shadow-sm mx-auto md:mx-0">
-                REXU is a technology-driven emergency safety and smart response platform designed to
-                improve personal and public safety through digital identity, emergency access
-                systems, and intelligent safety innovations.
-              </p>
-              <a
-                href="https://rexu.in"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-lime-400 text-black px-6 py-3 rounded-md font-semibold hover:bg-lime-300 transition-colors shadow-[0_0_20px_rgba(163,230,53,0.25)]"
-              >
-                Discover REXU
-                <ExternalLink size={18} />
-              </a>
-            </div>
-          </motion.div>
-        </motion.section>
-
-        {/* Section 2: Services */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={staggerContainer}
-          className="space-y-12"
-        >
-          <div className="text-center space-y-3">
-            <motion.h2 variants={fadeInUp} className="text-3xl font-display font-bold text-white">
-              Everything We Do
-            </motion.h2>
-            <motion.p variants={fadeInUp} className="text-zinc-400 max-w-2xl mx-auto">
-              AdMark Digitals is a research-first digital solutions company helping businesses
-              establish, scale, and modernize their digital presence.
-            </motion.p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                icon: Briefcase,
-                title: "Business Consultancy",
-                desc: "We use data, analytics, and strategic insights to help businesses understand opportunities, improve performance, and accelerate growth.",
-              },
-              {
-                icon: Code,
-                title: "Web Development",
-                desc: "We build fast, responsive, scalable, and conversion-focused websites tailored to business goals and user experience.",
-              },
-              {
-                icon: Smartphone,
-                title: "App Development",
-                desc: "From idea to launch, we build powerful Android and iOS mobile applications that help businesses engage users and scale.",
-              },
-              {
-                icon: Cpu,
-                title: "Custom Software Development",
-                desc: "Custom software solutions designed specifically for business operations, efficiency, scalability, and long-term growth.",
-              },
-              {
-                icon: RefreshCw,
-                title: "Automations",
-                desc: "We automate repetitive workflows and manual business operations to save time, reduce effort, and boost productivity.",
-              },
-              {
-                icon: MessageCircle,
-                title: "WhatsApp Chat Agents",
-                desc: "Smart WhatsApp chat agents that engage customers, answer queries, generate leads, and automate conversations 24/7.",
-              },
-              {
-                icon: Database,
-                title: "SaaS Software Development",
-                desc: "Scalable SaaS platforms built according to your business requirements, workflows, and customer needs.",
-                note: "(Based on Requirement)",
-              },
-              {
-                icon: Brain,
-                title: "Dataset Curations",
-                desc: "We collect, clean, structure, and curate high-quality datasets for AI, analytics, business intelligence, and machine learning.",
-              },
-            ].map((service, idx) => (
-              <ServiceCard key={idx} {...service} />
-            ))}
-
-            {/* AI Model Development Card */}
-            <motion.div
-              variants={fadeInUp}
-              className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-red-500/50 transition-colors md:col-span-2 lg:col-span-3"
-            >
-              <div className="flex flex-col lg:flex-row gap-8">
-                <div className="flex-1">
-                  <Brain className="w-8 h-8 text-red-500 mb-5" strokeWidth={1.5} />
-                  <h3 className="text-lg font-semibold text-white mb-2">AI Model Development</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl">
-                    We design, train, and deploy intelligent AI/ML models to solve real-world
-                    business problems and unlock automation.
-                  </p>
-                </div>
-                <div className="w-full lg:w-1/2">
-                  <p className="text-xs font-semibold text-zinc-500 mb-3 uppercase tracking-wider">
-                    AI Capabilities
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      "Predictive Models",
-                      "NLP & Computer Vision",
-                      "Recommendation Systems",
-                      "Process Intelligence",
-                      "Generative AI Solutions",
-                    ].map((chip, i) => (
-                      <span
-                        key={i}
-                        className="text-xs font-medium bg-zinc-800 text-zinc-300 px-3 py-1.5 rounded-full"
-                      >
-                        {chip}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Workforce [Tech] Card */}
-            <motion.div
-              variants={fadeInUp}
-              className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800 hover:border-red-500/50 transition-colors md:col-span-2 lg:col-span-3"
-            >
-              <div className="flex flex-col lg:flex-row gap-8">
-                <div className="flex-1">
-                  <Users className="w-8 h-8 text-red-500 mb-5" strokeWidth={1.5} />
-                  <h3 className="text-lg font-semibold text-white mb-2">Workforce [Tech]</h3>
-                  <p className="text-zinc-400 text-sm leading-relaxed max-w-2xl">
-                    We provide skilled and vetted tech professionals tailored to your requirements —
-                    developers, designers, QA engineers, DevOps, and project managers.
-                  </p>
-                </div>
-                <div className="w-full lg:w-1/2">
-                  <p className="text-xs font-semibold text-zinc-500 mb-3 uppercase tracking-wider">
-                    Benefits
-                  </p>
-                  <ul className="space-y-2">
-                    {[
-                      "Skilled & Vetted Professionals",
-                      "Flexible Engagement Models",
-                      "Scale Teams Effortlessly",
-                      "Faster Product Delivery",
-                    ].map((benefit, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm text-zinc-300">
-                        <CheckCircle2 className="w-4 h-4 text-red-500" strokeWidth={2} />
-                        <span>{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </motion.div>
           </div>
         </motion.section>
 
-        {/* Section 3: Why Choose Us */}
         <motion.section
           initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={staggerContainer}
-          className="space-y-10"
+          animate="visible"
+          variants={fadeInUp}
+          transition={{ delay: 0.2 }}
+          className="max-w-2xl mx-auto"
         >
-          <div className="text-center">
-            <motion.h2
-              variants={fadeInUp}
-              className="text-3xl font-display font-bold text-white mb-2"
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            <motion.button
+              onClick={() => setActiveTab("admark")}
+              className={`relative overflow-hidden rounded-xl transition-all duration-500 aspect-video ${
+                activeTab === "admark"
+                  ? "bg-gradient-to-br from-red-500/20 to-red-600/20 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.3)]"
+                  : "bg-white/5 border border-white/10 hover:bg-white/10"
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Why Businesses Choose Us
-            </motion.h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[
-              { title: "Research-First Approach", desc: "We understand before we execute." },
-              { title: "End-to-End Execution", desc: "From strategy to execution." },
-              { title: "Scalable Technology", desc: "Built for future growth." },
-              { title: "Premium Quality Delivery", desc: "Focused on excellence." },
-              { title: "Business-Focused Solutions", desc: "Technology aligned with outcomes." },
-              { title: "One Partner. Multiple Solutions", desc: "Everything under one roof." },
-            ].map((item, idx) => (
+              {/* Stylish Gradient Border Effect */}
+              {activeTab === "admark" && (
+                <>
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="absolute inset-0 bg-gradient-to-br from-red-500/10 to-red-600/10 rounded-xl"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-red-400/5 via-transparent to-red-600/10 rounded-xl" />
+                </>
+              )}
+              
               <motion.div
-                key={idx}
-                variants={fadeInUp}
-                className="flex flex-col p-6 bg-zinc-900/30 rounded-xl border border-zinc-800"
+                className="absolute inset-0 flex items-center justify-center p-3 sm:p-8"
+                animate={activeTab === "admark" ? {
+                  filter: [
+                    "drop-shadow(0 0 20px rgba(239, 68, 68, 0.6))",
+                    "drop-shadow(0 0 30px rgba(239, 68, 68, 0.8))",
+                    "drop-shadow(0 0 20px rgba(239, 68, 68, 0.6))"
+                  ]
+                } : {}}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               >
-                <h4 className="text-base font-semibold text-white mb-1">{item.title}</h4>
-                <p className="text-zinc-400 text-sm">{item.desc}</p>
+                <img 
+                  src={logo} 
+                  alt="Admark" 
+                  className="w-[70%] h-auto object-contain"
+                />
               </motion.div>
-            ))}
-          </div>
-        </motion.section>
+            </motion.button>
 
-        {/* Section 4: About Founder */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={staggerContainer}
-          className="space-y-10"
-        >
-          <motion.div
-            variants={fadeInUp}
-            className="max-w-4xl mx-auto p-8 sm:p-12 rounded-xl bg-zinc-900/50 border border-zinc-800 flex flex-col md:flex-row gap-10 items-center"
-          >
-            <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-full overflow-hidden border border-zinc-700 flex-shrink-0 bg-zinc-800">
-              <img src={ceoImg} alt="Tejasvi Jois" className="w-full h-full object-cover" />
-            </div>
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-display font-bold text-white mb-1">Tejasvi Jois</h3>
-              <p className="text-red-500 font-medium mb-4 text-sm">
-                Founder, AdMark Digitals & REXU
-              </p>
-              <p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-6">
-                Tejasvi Jois is the Founder of AdMark Digitals and REXU, helping businesses grow
-                through technology, digital transformation, branding, automation, and modern growth
-                systems. With a research-driven approach and strong focus on innovation, AdMark
-                Digitals works closely with brands to build impactful digital experiences and
-                scalable business solutions.
-              </p>
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
-                <a
-                  href="mailto:tejasvijois@gmail.com"
-                  className="inline-flex items-center gap-2 bg-zinc-800 hover:bg-zinc-700 text-white px-5 py-2.5 rounded-md font-medium transition-colors text-sm"
-                >
-                  <Mail size={16} />
-                  tejasvijois@gmail.com
-                </a>
-                <a
-                  href="https://wa.me/919686658055"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 bg-[#25D366]/20 hover:bg-[#25D366]/30 text-[#25D366] px-5 py-2.5 rounded-md font-medium transition-colors text-sm"
-                >
-                  <MessageCircle size={16} />
-                  WhatsApp
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/tejasvijois?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center gap-2 bg-[#0A66C2]/20 hover:bg-[#0A66C2]/30 text-[#0A66C2] px-5 py-2.5 rounded-md font-medium transition-colors text-sm"
-                >
-                  <Linkedin size={16} />
-                  LinkedIn
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        </motion.section>
-
-        {/* Section 6: Contact Information */}
-        <motion.section
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={staggerContainer}
-          className="space-y-10 pb-16"
-        >
-          <div className="text-center">
-            <motion.h2
-              variants={fadeInUp}
-              className="text-3xl font-display font-bold text-white mb-2"
+            <motion.button
+              onClick={() => setActiveTab("rexo")}
+              className={`relative overflow-hidden rounded-xl transition-all duration-500 aspect-video ${
+                activeTab === "rexo"
+                  ? "bg-gradient-to-br from-lime-500/20 to-lime-600/20 border-2 border-lime-400 shadow-[0_0_30px_rgba(163,230,53,0.3)]"
+                  : "bg-white/5 border border-white/10 hover:bg-white/10"
+              }`}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              Contact Us
-            </motion.h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <motion.div
-              variants={fadeInUp}
-              className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800 flex flex-col gap-4 md:col-span-2 lg:col-span-1"
-            >
-              <div className="flex items-center gap-3">
-                <Phone className="w-6 h-6 text-red-500" />
-                <div>
-                  <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-0.5">
-                    Call & WhatsApp
-                  </p>
-                  <p className="text-lg font-bold text-white">96866 58055</p>
-                </div>
-              </div>
-              <div className="w-full flex gap-3 mt-2">
-                <a
-                  href="tel:9686658055"
-                  className="flex-1 py-2.5 text-center bg-zinc-800 hover:bg-zinc-700 rounded-md font-medium transition-colors text-sm"
-                >
-                  Call
-                </a>
-                <a
-                  href="https://wa.me/919686658055"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex-1 py-2.5 text-center bg-red-600 hover:bg-red-700 text-white rounded-md font-medium transition-colors text-sm"
-                >
-                  WhatsApp
-                </a>
-              </div>
-            </motion.div>
-
-            <motion.div
-              variants={fadeInUp}
-              className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800 flex flex-col gap-4"
-            >
-              <div className="flex items-center gap-3">
-                <Mail className="w-6 h-6 text-red-500" />
-                <div className="min-w-0">
-                  <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-0.5">
-                    Company Email
-                  </p>
-                  <p className="text-lg font-bold text-white truncate">info@admarkdigitals.com</p>
-                </div>
-              </div>
-              <a
-                href="mailto:info@admarkdigitals.com"
-                className="w-full py-2.5 text-center mt-2 bg-zinc-800 hover:bg-zinc-700 rounded-md font-medium transition-colors text-sm"
+              {/* Stylish Gradient Border Effect */}
+              {activeTab === "rexo" && (
+                <>
+                  <motion.div
+                    layoutId="activeIndicator"
+                    className="absolute inset-0 bg-gradient-to-br from-lime-500/10 to-lime-600/10 rounded-xl"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-tr from-lime-400/5 via-transparent to-lime-600/10 rounded-xl" />
+                </>
+              )}
+              
+              <motion.div
+                className="absolute inset-0 flex items-center justify-center p-1 sm:p-4"
+                animate={activeTab === "rexo" ? {
+                  filter: [
+                    "drop-shadow(0 0 20px rgba(163, 230, 53, 0.6))",
+                    "drop-shadow(0 0 30px rgba(163, 230, 53, 0.8))",
+                    "drop-shadow(0 0 20px rgba(163, 230, 53, 0.6))"
+                  ]
+                } : {}}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
               >
-                Send Email
-              </a>
-            </motion.div>
-
-            <motion.div
-              variants={fadeInUp}
-              className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800 flex flex-col gap-4"
-            >
-              <div className="flex items-center gap-3">
-                <Globe className="w-6 h-6 text-red-500" />
-                <div className="min-w-0">
-                  <p className="text-zinc-500 text-xs font-semibold uppercase tracking-wider mb-0.5">
-                    Website
-                  </p>
-                  <p className="text-lg font-bold text-white truncate">
-                    https://admarkdigitals.com
-                  </p>
-                </div>
-              </div>
-              <a
-                href="https://admarkdigitals.com"
-                className="w-full py-2.5 text-center mt-2 bg-zinc-800 hover:bg-zinc-700 rounded-md font-medium transition-colors flex items-center justify-center gap-2 text-sm"
-              >
-                Visit Website <ArrowRight size={16} />
-              </a>
-            </motion.div>
+                <video
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-[95%] h-auto object-contain"
+                  src={rexuVideo}
+                />
+              </motion.div>
+            </motion.button>
           </div>
         </motion.section>
+
+        <AnimatePresence mode="wait">
+          {activeTab === "admark" ? (
+            <motion.section
+              key="admark"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-8"
+            >
+              <div className="text-center space-y-3 max-w-3xl mx-auto">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                  AdMark Digitals
+                </h2>
+                <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+                  A research-first digital solutions company helping businesses establish, scale,
+                  and modernize their digital presence through technology, branding, and innovation.
+                </p>
+              </div>
+
+              <div className="space-y-3 sm:space-y-4">
+                {[
+                  {
+                    icon: Briefcase,
+                    title: "Business Consultancy",
+                    desc: "We use data, analytics, and strategic insights to help businesses understand opportunities, improve performance, and accelerate growth.",
+                  },
+                  {
+                    icon: Code,
+                    title: "Web Development",
+                    desc: "We build fast, responsive, scalable, and conversion-focused websites tailored to business goals and exceptional user experience.",
+                  },
+                  {
+                    icon: Smartphone,
+                    title: "App Development",
+                    desc: "From idea to launch, we build powerful Android and iOS mobile applications that help businesses engage users and scale effectively.",
+                  },
+                  {
+                    icon: Cpu,
+                    title: "Custom Software Development",
+                    desc: "Custom software solutions designed specifically for business operations, efficiency, scalability, and long-term growth.",
+                  },
+                  {
+                    icon: RefreshCw,
+                    title: "Automations",
+                    desc: "We automate repetitive workflows and manual business operations to save time, reduce effort, and boost productivity significantly.",
+                  },
+                  {
+                    icon: MessageSquare,
+                    title: "WhatsApp Chat Agents",
+                    desc: "Smart WhatsApp chat agents that engage customers, answer queries, generate leads, and automate conversations 24/7.",
+                  },
+                  {
+                    icon: Database,
+                    title: "SaaS Development",
+                    desc: "Scalable SaaS platforms built according to your business requirements, workflows, and customer needs for sustainable growth.",
+                  },
+                  {
+                    icon: Brain,
+                    title: "AI & ML Solutions",
+                    desc: "We design, train, and deploy intelligent AI/ML models to solve real-world business problems and unlock powerful automation.",
+                  },
+                  {
+                    icon: Users,
+                    title: "Tech Workforce",
+                    desc: "Skilled and vetted tech professionals tailored to your requirements — developers, designers, QA engineers, DevOps, and project managers.",
+                  },
+                ].map((service, idx) => (
+                  <ServiceCard key={idx} {...service} index={idx} isAdmark={activeTab === "admark"} />
+                ))}
+              </div>
+
+              <div className="flex justify-center pt-4">
+                <motion.a
+                  href="https://admarkdigitals.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-500 shadow-lg shadow-red-500/25"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Visit Website
+                  <ExternalLink size={18} />
+                </motion.a>
+              </div>
+            </motion.section>
+          ) : (
+            <motion.section
+              key="rexo"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="space-y-8"
+            >
+              <div className="text-center space-y-3 max-w-3xl mx-auto">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white">
+                  REXU
+                </h2>
+                <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
+                  A technology-driven emergency safety and smart response platform designed to
+                  improve personal and public safety through digital identity, emergency access
+                  systems, and intelligent safety innovations.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6 max-w-3xl mx-auto">
+                {[
+                  {
+                    icon: Shield,
+                    title: "Safety First",
+                    desc: "Advanced emergency response systems for personal and public safety.",
+                  },
+                  {
+                    icon: Zap,
+                    title: "Smart Technology",
+                    desc: "AI-powered intelligent safety solutions for rapid response.",
+                  },
+                  {
+                    icon: Target,
+                    title: "Digital Identity",
+                    desc: "Secure digital identity and emergency access management.",
+                  },
+                ].map((feature, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="group relative overflow-hidden bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 hover:bg-white/10 hover:border-lime-400/50 transition-all duration-500"
+                  >
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-lime-400/5 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <feature.icon className="w-8 h-8 text-lime-400 mb-3 transition-colors duration-500" strokeWidth={1.5} />
+                    <h3 className="text-base font-semibold text-white mb-2">{feature.title}</h3>
+                    <p className="text-sm text-slate-400 leading-relaxed">{feature.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className={`bg-gradient-to-br ${currentTheme.bgGradient} border ${currentTheme.borderColor}/20 rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto transition-all duration-700`}>
+                <h3 className="text-xl font-bold text-white mb-3">Key Features</h3>
+                <ul className="space-y-3">
+                  {[
+                    "Emergency response system with instant alerts",
+                    "Digital identity verification and management",
+                    "Smart safety monitoring and tracking",
+                    "AI-powered threat detection and prevention",
+                    "Integrated emergency services coordination",
+                  ].map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <CheckCircle2 className={`w-5 h-5 ${currentTheme.textColor} flex-shrink-0 mt-0.5 transition-colors duration-500`} />
+                      <span className="text-slate-300 text-sm sm:text-base">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="flex justify-center pt-4">
+                <motion.a
+                  href="https://rexu.in"
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`inline-flex items-center gap-2 ${currentTheme.btnBg} px-8 py-4 rounded-xl font-semibold transition-all duration-500 shadow-lg ${currentTheme.shadowColor}`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Discover REXU
+                  <ExternalLink size={18} />
+                </motion.a>
+              </div>
+            </motion.section>
+          )}
+        </AnimatePresence>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-zinc-800 bg-black py-8 relative z-10">
-        <div className="max-w-6xl mx-auto px-6 text-center">
-          <p className="text-zinc-500 text-sm">
-            AdMark Digitals — Building Solutions. Driving Growth. Creating Impact.
-          </p>
-        </div>
-      </footer>
-
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 flex flex-col gap-3 sm:gap-4 z-50 pb-[env(safe-area-inset-bottom)] pr-[env(safe-area-inset-right)]">
-        <a
+      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
+        <motion.a
           href="tel:9686658055"
-          className="w-12 h-12 bg-white text-black rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform duration-200"
-          aria-label="Call us"
+          className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full shadow-2xl hover:shadow-blue-500/50 flex items-center justify-center transition-all duration-300"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          aria-label="Call"
         >
-          <Phone size={20} className="fill-current" />
-        </a>
-        <a
+          <svg className="w-6 h-6" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/>
+          </svg>
+        </motion.a>
+        <motion.a
           href="https://wa.me/919686658055"
           target="_blank"
           rel="noreferrer"
-          className="w-12 h-12 bg-[#25D366] text-white rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform duration-200"
-          aria-label="WhatsApp us"
+          className="w-14 h-14 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-2xl hover:shadow-[#25D366]/50 flex items-center justify-center transition-all duration-300"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          aria-label="WhatsApp"
         >
-          <MessageCircle size={24} className="fill-current" />
-        </a>
+          <svg className="w-7 h-7" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+        </motion.a>
       </div>
     </div>
   );
