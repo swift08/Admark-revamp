@@ -19,7 +19,7 @@ import { HeroHeadline } from "@/components/site/HeroHeadline";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { TeamPhoto } from "@/components/site/TeamPhoto";
 import { CareersTeaser } from "@/components/site/CareersList";
-import { WorkTeaser } from "@/components/site/WorkGrid";
+import { WorkCoverflow, WorkTeaser } from "@/components/site/WorkGrid";
 import { CAREER_OPENINGS } from "@/data/careers";
 import { SERVICE_GROUPS } from "@/data/services";
 import { CASE_STUDIES, FEATURED_PROJECT } from "@/data/work";
@@ -87,18 +87,6 @@ const PROCESS = [
     t: "Launch & Scale",
     d: "Deploy, monitor, iterate. Infrastructure scaled as load demands.",
   },
-];
-
-const INDUSTRIES = [
-  "Manufacturing",
-  "Infrastructure",
-  "Beauty & Salon",
-  "SaaS Startups",
-  "Wellness",
-  "Events & Hospitality",
-  "Logistics",
-  "Drones & Aerospace",
-  "Education",
 ];
 
 const TESTIMONIALS = [
@@ -465,24 +453,9 @@ function Industries() {
           Versatile by design.
           <span className="text-muted-foreground"> Industry-agnostic by architecture.</span>
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {INDUSTRIES.map((ind, i) => (
-            <div
-              key={ind}
-              className="bg-background flex items-center justify-between gap-3 p-4 sm:p-5 md:p-6 border border-border-bright rounded-2xl md:rounded-3xl"
-            >
-              <span className="font-display text-xl sm:text-2xl md:text-3xl font-medium min-w-0 text-pretty">
-                {ind}
-              </span>
-              <span className="font-mono text-sm text-brand-red transition-colors shrink-0">
-                / {String(i + 1).padStart(2, "0")}
-              </span>
-            </div>
-          ))}
-        </div>
+        <WorkCoverflow />
       </div>
     </section>
-
   );
 }
 

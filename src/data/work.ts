@@ -23,6 +23,15 @@ export type CaseStudy = {
   url?: string;
 };
 
+export type WorkShowcase = {
+  id: string;
+  name: string;
+  tag: string;
+  body: string;
+  image: string;
+  url: string;
+};
+
 export const FEATURED_PROJECT: FeaturedProject = {
   name: "REXU",
   url: "https://rexu.in/",
@@ -81,8 +90,52 @@ export const CLIENT_PROJECTS: ClientProject[] = [
   },
 ];
 
-/** Preview cards for homepage — first two client sites */
-export const CASE_STUDIES: CaseStudy[] = CLIENT_PROJECTS.slice(0, 2).map((p, i) => ({
+/** Industry visual cards for homepage 3D coverflow */
+export const WORK_SHOWCASE: WorkShowcase[] = [
+  {
+    id: "manufacturing",
+    name: "Manufacturing",
+    tag: "ERP · Operations",
+    body: "Shop-floor systems and production tooling built around real workflows — not templates.",
+    image: "/work/work-manufacturing.png",
+    url: "/work",
+  },
+  {
+    id: "saas",
+    name: "SaaS Platforms",
+    tag: "Product · Scale",
+    body: "Multi-tenant products with clean architecture, billing-ready foundations, and room to grow.",
+    image: "/work/work-saas.png",
+    url: "https://rexu.in/",
+  },
+  {
+    id: "salon",
+    name: "Beauty & Salon",
+    tag: "Brand · Bookings",
+    body: "Polished digital presence for wellness and salon brands that need to convert walk-ins online.",
+    image: "/work/work-salon.png",
+    url: "/work",
+  },
+  {
+    id: "infrastructure",
+    name: "Infrastructure",
+    tag: "Web · Corporate",
+    body: "Authoritative sites for builders and infrastructure firms — clear, credible, conversion-led.",
+    image: "/work/work-infrastructure.png",
+    url: "https://www.vividinfrastructures.com/",
+  },
+  {
+    id: "aerospace",
+    name: "Drones & Aerospace",
+    tag: "Web · Brand",
+    body: "High-ambition digital platforms for aerospace and drone companies ready to look the part.",
+    image: "/work/work-aerospace.png",
+    url: "https://dronarkaerospace.com",
+  },
+];
+
+/** Preview cards for homepage carousel */
+export const CASE_STUDIES: CaseStudy[] = CLIENT_PROJECTS.slice(0, 5).map((p, i) => ({
   ref: String(i + 1).padStart(2, "0"),
   name: p.location ? `${p.name} — ${p.location}` : p.name,
   tag: "Web · Live",

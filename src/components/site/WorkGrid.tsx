@@ -1,20 +1,217 @@
 import { Link } from "@tanstack/react-router";
-import type { CaseStudy, ClientProject, FeaturedProject } from "@/data/work";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import type {
+  CaseStudy,
+  ClientProject,
+  FeaturedProject,
+  WorkShowcase,
+} from "@/data/work";
+import { WORK_SHOWCASE } from "@/data/work";
 import { cn } from "@/lib/utils";
 
 function ExternalProjectLink({
   href,
   className,
   children,
+  "aria-label": ariaLabel,
 }: {
   href: string;
   className?: string;
   children: React.ReactNode;
+  "aria-label"?: string;
 }) {
   return (
-    <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+      aria-label={ariaLabel}
+    >
       {children}
     </a>
+  );
+}
+
+function wrapOffset(i: number, active: number, n: number) {
+  let offset = i - active;
+  if (offset > Math.floor(n / 2)) offset -= n;
+  if (offset < -Math.floor(n / 2)) offset += n;
+  return offset;
+}
+
+const STACK_EASE = [0.22, 0.61, 0.36, 1] as const;
+const STACK_DURATION = 1.35;
+/** Horizontal spacing between coverflow cards (px) */
+const CARD_STEP = 245;
+const PEEK_ANGLE = 32;
+
+function CoverflowCard({ card, active }: { card: WorkShowcase; active: boolean }) {
+  return (
+    <article className="relative h-[22rem] w-[13.5rem] overflow-hidden rounded-2xl border border-border-dim bg-surface sm:h-[26rem] sm:w-[16rem]">
+      <img
+        src={card.image}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover"
+        draggable={false}
+      />
+      {active ? (
+        <motion.span
+          key={`shine-${card.id}`}
+          aria-hidden
+          className="pointer-events-none absolute inset-y-[-10%] z-[2] w-[45%] -skew-x-12 bg-gradient-to-r from-transparent via-brand-red/45 to-transparent"
+          initial={{ left: "-50%", opacity: 0 }}
+          animate={{ left: "130%", opacity: [0, 1, 1, 0] }}
+          transition={{ duration: 1.2, ease: [0.22, 0.61, 0.36, 1], delay: 0.85 }}
+        />
+      ) : null}
+      {/* Black blend from bottom up through the red tag */}
+      <div className="absolute inset-x-0 bottom-0 z-[1] bg-gradient-to-t from-black from-15% via-black/95 via-45% to-transparent pt-24 pb-4 pl-4 pr-4 sm:pb-5 sm:pl-5 sm:pr-5">
+        <p className="font-mono text-[10px] uppercase tracking-widest text-brand-red">{card.tag}</p>
+        <h3 className="mt-2 font-display text-lg font-bold tracking-tight sm:text-xl">{card.name}</h3>
+        <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
+          {card.body}
+        </p>
+        <span className="mt-2 inline-block text-xs text-foreground">View work →</span>
+      </div>
+    </article>
+  );
+}
+
+export function WorkCoverflow({ cards = WORK_SHOWCASE }: { cards?: WorkShowcase[] }) {
+  const [active, setActive] = useState(0);
+  const reduceMotion = useReducedMotion();
+  const n = cards.length;
+
+  useEffect(() => {
+    if (n < 2 || reduceMotion) return;
+    const id = window.setInterval(() => setActive((i) => (i + 1) % n), 5000);
+    return () => window.clearInterval(id);
+  }, [n, reduceMotion, active]);
+
+  if (n === 0) return null;
+
+  const tween = reduceMotion
+    ? { duration: 0 }
+    : { type: "tween" as const, duration: STACK_DURATION, ease: STACK_EASE };
+  const rotateTween = reduceMotion
+    ? { duration: 0 }
+    : { type: "tween" as const, duration: STACK_DURATION + 0.2, ease: STACK_EASE };
+
+  return (
+    <div className="relative flex flex-col items-center gap-5">
+      <div
+        className="relative mx-auto h-[24rem] w-full min-w-0 overflow-hidden sm:h-[28rem]"
+        style={{ perspective: "1600px", perspectiveOrigin: "50% 50%" }}
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 left-0 z-20 w-12 bg-gradient-to-r from-background to-transparent sm:w-20"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 z-20 w-12 bg-gradient-to-l from-background to-transparent sm:w-20"
+        />
+
+        {cards.map((card, i) => {
+          const offset = wrapOffset(i, active, n);
+          const isCenter = offset === 0;
+          const isPeek = Math.abs(offset) === 1;
+          const far = Math.abs(offset) > 1;
+          // Same size as center for every card in the revolution
+          const x = offset * CARD_STEP;
+          const rotateY = isCenter ? 0 : Math.sign(offset || 1) * -PEEK_ANGLE * Math.min(Math.abs(offset), 2);
+          const opacity = far ? 0 : isCenter ? 1 : 0.75;
+          const z = isCenter ? 20 : isPeek ? 10 : 1;
+          // Snap when off-stage so the deck can revolve without jumping across the screen
+          const stage = far
+            ? { duration: 0 }
+            : tween;
+          const stageRotate = far
+            ? { duration: 0 }
+            : rotateTween;
+
+          return (
+            <div
+              key={card.id}
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              style={{ zIndex: z, pointerEvents: far ? "none" : "auto" }}
+              aria-hidden={far || undefined}
+            >
+              <motion.div
+                className="origin-center will-change-transform"
+                style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
+                initial={false}
+                animate={{
+                  x,
+                  rotateY,
+                  scale: 1,
+                  opacity,
+                }}
+                transition={{
+                  x: stage,
+                  rotateY: stageRotate,
+                  scale: stage,
+                  opacity: far
+                    ? { duration: reduceMotion ? 0 : 0.35 }
+                    : { ...tween, duration: reduceMotion ? 0 : 1.1 },
+                }}
+              >
+                <div className="relative" style={{ transformStyle: "preserve-3d" }}>
+                  <CoverflowCard card={card} active={isCenter} />
+                  {isCenter ? (
+                    card.url.startsWith("http") ? (
+                      <ExternalProjectLink
+                        href={card.url}
+                        className="absolute inset-0 z-10"
+                        aria-label={`View ${card.name}`}
+                      >
+                        <span className="sr-only">View {card.name}</span>
+                      </ExternalProjectLink>
+                    ) : (
+                      <Link
+                        to="/work"
+                        className="absolute inset-0 z-10"
+                        aria-label={`View ${card.name}`}
+                      />
+                    )
+                  ) : isPeek ? (
+                    <button
+                      type="button"
+                      className="absolute inset-0 z-10 cursor-pointer"
+                      onClick={() => setActive(i)}
+                      aria-label={`Show ${card.name}`}
+                    />
+                  ) : null}
+                </div>
+              </motion.div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div
+        className="flex items-center justify-center gap-2"
+        role="tablist"
+        aria-label="Industries"
+      >
+        {cards.map((card, i) => (
+          <button
+            key={card.id}
+            type="button"
+            role="tab"
+            aria-selected={i === active}
+            aria-label={card.name}
+            onClick={() => setActive(i)}
+            className={cn(
+              "h-1.5 transition-all duration-500",
+              i === active ? "w-6 bg-foreground" : "w-1.5 bg-border-bright hover:bg-muted-foreground",
+            )}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -160,12 +357,13 @@ export function WorkGrid({ studies }: WorkGridProps) {
   );
 }
 
-type WorkTeaserProps = {
+export function WorkTeaser({
+  featured,
+  studies,
+}: {
   featured: FeaturedProject;
   studies: CaseStudy[];
-};
-
-export function WorkTeaser({ featured, studies }: WorkTeaserProps) {
+}) {
   return (
     <>
       <div className="mb-px border border-border-dim">
