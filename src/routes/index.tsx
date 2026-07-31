@@ -201,7 +201,7 @@ function Hero() {
           />
         </div>
 
-        <div className="col-start-1 row-start-1 z-10 min-h-[min(200svh,200dvh)] w-full">
+        <div className="col-start-1 row-start-1 z-10 w-full">
           <div className="flex h-svh w-full flex-col justify-end pt-[4.25rem] max-sm:pb-8 sm:pb-0">
             <div className="site-container max-w-5xl pb-24 sm:pb-12 md:pb-16">
               <p className="text-xs sm:text-sm text-brand-silver mb-4 max-w-md">
@@ -256,7 +256,6 @@ function Hero() {
               </dl>
             </div>
           </div>
-          <div className="h-svh w-full" aria-hidden />
         </div>
       </div>
     </section>
