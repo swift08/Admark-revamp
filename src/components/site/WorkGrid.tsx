@@ -8,6 +8,7 @@ import type {
   WorkShowcase,
 } from "@/data/work";
 import { WORK_SHOWCASE } from "@/data/work";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
 
 function ExternalProjectLink({
@@ -222,61 +223,109 @@ export function WorkFeatured({
   project: FeaturedProject;
   compact?: boolean;
 }) {
+  const [hovered, setHovered] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const { ref, visible } = useScrollReveal<HTMLElement>({
+    once: false,
+    threshold: 0.45,
+    rootMargin: "0px",
+  });
+  const expanded = Boolean(project.previewImage) && (hovered || visible);
+
   return (
     <article
+      ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       className={cn(
-        "group border border-border-dim bg-background transition-colors hover:bg-muted/30",
-        compact ? "p-6 lg:p-8" : "p-6 lg:p-12",
+        "group relative overflow-hidden border border-border-dim bg-background",
+        reduceMotion ? "" : "transition-[box-shadow] duration-500",
+        expanded && "shadow-[0_0_0_1px_var(--border-dim)]",
       )}
     >
-      <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-brand-red">
-        Featured project
-      </p>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h2
-            className={cn(
-              "font-display font-bold tracking-tight transition-colors group-hover:text-brand-red",
-              compact ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl",
-            )}
-          >
-            {project.name}
-          </h2>
+      {/* Top half: rexu.in website preview — expands on hover / in-view */}
+      {project.previewImage ? (
+        <div
+          className={cn(
+            "grid transition-[grid-template-rows] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
+            expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+          )}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div className="relative h-44 sm:h-56 md:h-72 lg:h-80">
+              <img
+                src={project.previewImage}
+                alt={`${project.name} website preview`}
+                className="h-full w-full object-cover object-top"
+                draggable={false}
+              />
+              {/* Blend image down into the copy */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-background via-background/80 to-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <div
+        className={cn(
+          "relative",
+          compact ? "p-6 lg:p-8" : "p-6 lg:p-12",
+          // Soft black wash from copy bottom up through Featured label
+          "bg-gradient-to-t from-background from-20% via-background/95 to-transparent",
+        )}
+      >
+        <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-brand-red">
+          Featured project
+        </p>
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2
+              className={cn(
+                "font-display font-bold tracking-tight transition-colors group-hover:text-brand-red",
+                compact ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl",
+              )}
+            >
+              {project.name}
+            </h2>
+            <ExternalProjectLink
+              href={project.url}
+              className="mt-2 inline-block text-sm text-muted-foreground transition-colors hover:text-brand-red"
+            >
+              {project.domain}
+            </ExternalProjectLink>
+          </div>
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            {project.tag}
+          </span>
+        </div>
+        <p
+          className={cn(
+            "max-w-3xl font-display font-medium tracking-tight text-foreground",
+            compact ? "mb-3 text-lg" : "mb-4 text-xl md:text-2xl",
+          )}
+        >
+          {project.headline}
+        </p>
+        <p
+          className={cn(
+            "max-w-3xl leading-relaxed text-muted-foreground",
+            compact ? "text-sm" : "text-base",
+          )}
+        >
+          {project.body}
+        </p>
+        <div className="mt-8 flex items-center justify-between border-t border-border-dim pt-6">
+          <span className="text-xs text-muted-foreground">Live in production</span>
           <ExternalProjectLink
             href={project.url}
-            className="mt-2 inline-block text-sm text-muted-foreground transition-colors hover:text-brand-red"
+            className="text-sm text-foreground transition-colors hover:text-brand-red"
           >
-            {project.domain}
+            View project →
           </ExternalProjectLink>
         </div>
-        <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-          {project.tag}
-        </span>
-      </div>
-      <p
-        className={cn(
-          "max-w-3xl font-display font-medium tracking-tight text-foreground",
-          compact ? "mb-3 text-lg" : "mb-4 text-xl md:text-2xl",
-        )}
-      >
-        {project.headline}
-      </p>
-      <p
-        className={cn(
-          "max-w-3xl leading-relaxed text-muted-foreground",
-          compact ? "text-sm" : "text-base",
-        )}
-      >
-        {project.body}
-      </p>
-      <div className="mt-8 flex items-center justify-between border-t border-border-dim pt-6">
-        <span className="text-xs text-muted-foreground">Live in production</span>
-        <ExternalProjectLink
-          href={project.url}
-          className="text-sm text-foreground transition-colors hover:text-brand-red"
-        >
-          View project →
-        </ExternalProjectLink>
       </div>
     </article>
   );
@@ -315,43 +364,85 @@ type WorkGridProps = {
   studies: CaseStudy[];
 };
 
+function WorkStudyCard({ study }: { study: CaseStudy }) {
+  const [hovered, setHovered] = useState(false);
+  const { ref, visible } = useScrollReveal<HTMLElement>({
+    once: false,
+    threshold: 0.45,
+    rootMargin: "0px",
+  });
+  const expanded = Boolean(study.previewImage) && (hovered || visible);
+
+  return (
+    <article
+      ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="group relative overflow-hidden bg-background transition-colors"
+    >
+      {study.previewImage ? (
+        <div
+          className={cn(
+            "grid transition-[grid-template-rows] duration-700 ease-[cubic-bezier(0.22,0.61,0.36,1)]",
+            expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
+          )}
+        >
+          <div className="min-h-0 overflow-hidden">
+            <div className="relative h-40 sm:h-48 md:h-56">
+              <img
+                src={study.previewImage}
+                alt={`${study.name} website preview`}
+                className="h-full w-full object-cover object-top"
+                draggable={false}
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/55 to-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <div className="relative bg-gradient-to-t from-background from-20% via-background/95 to-transparent p-6 lg:p-8">
+        <div className="mb-6 flex flex-wrap items-start justify-between gap-2">
+          <span className="shrink-0 text-xs text-muted-foreground">Ref {study.ref}</span>
+          <span className="max-w-[60%] text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            {study.tag}
+          </span>
+        </div>
+        <h3 className="mb-3 font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-brand-red md:text-3xl">
+          {study.name}
+        </h3>
+        <p className="max-w-md text-sm leading-relaxed text-muted-foreground line-clamp-4">
+          {study.body}
+        </p>
+        <div className="mt-8 flex items-center justify-between border-t border-border-dim pt-6">
+          <span className="text-xs text-muted-foreground">Live in production</span>
+          {study.url ? (
+            <ExternalProjectLink
+              href={study.url}
+              className="text-sm text-foreground transition-colors hover:text-brand-red"
+            >
+              View project →
+            </ExternalProjectLink>
+          ) : (
+            <span className="text-sm text-foreground transition-colors group-hover:text-brand-red">
+              View project →
+            </span>
+          )}
+        </div>
+      </div>
+    </article>
+  );
+}
+
 /** Legacy grid for homepage preview cards */
 export function WorkGrid({ studies }: WorkGridProps) {
   return (
     <div className="grid gap-px border border-border-dim bg-border-dim md:grid-cols-2">
       {studies.map((w) => (
-        <article
-          key={w.ref}
-          className="group bg-background p-6 transition-colors hover:bg-muted/30 lg:p-8"
-        >
-          <div className="mb-6 flex flex-wrap items-start justify-between gap-2">
-            <span className="shrink-0 text-xs text-muted-foreground">Ref {w.ref}</span>
-            <span className="max-w-[60%] text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-              {w.tag}
-            </span>
-          </div>
-          <h3 className="mb-3 font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-brand-red md:text-3xl">
-            {w.name}
-          </h3>
-          <p className="max-w-md text-sm leading-relaxed text-muted-foreground line-clamp-4">
-            {w.body}
-          </p>
-          <div className="mt-8 flex items-center justify-between border-t border-border-dim pt-6">
-            <span className="text-xs text-muted-foreground">Live in production</span>
-            {w.url ? (
-              <ExternalProjectLink
-                href={w.url}
-                className="text-sm text-foreground transition-colors hover:text-brand-red"
-              >
-                View project →
-              </ExternalProjectLink>
-            ) : (
-              <span className="text-sm text-foreground transition-colors group-hover:text-brand-red">
-                View project →
-              </span>
-            )}
-          </div>
-        </article>
+        <WorkStudyCard key={w.ref} study={w} />
       ))}
     </div>
   );

@@ -5,6 +5,8 @@ export type FeaturedProject = {
   tag: string;
   headline: string;
   body: string;
+  /** Website preview shown when the featured card expands */
+  previewImage?: string;
 };
 
 export type ClientProject = {
@@ -21,6 +23,7 @@ export type CaseStudy = {
   tag: string;
   body: string;
   url?: string;
+  previewImage?: string;
 };
 
 export type WorkShowcase = {
@@ -39,6 +42,7 @@ export const FEATURED_PROJECT: FeaturedProject = {
   tag: "Safety · SaaS · B2B & B2C",
   headline: "Technology that speaks when you can't.",
   body: "REXU is a safety and trust platform for real-world emergencies — for individual riders and families, and for logistics companies, cab operators, and fleet owners. A QR on your vehicle or ID lets anyone reach your emergency contacts in seconds: no app required, privacy intact, active 24/7. Built for Indian roads, families, and workplaces.",
+  previewImage: "/work/rexu-site.png",
 };
 
 export const CLIENT_PROJECTS: ClientProject[] = [
@@ -141,4 +145,15 @@ export const CASE_STUDIES: CaseStudy[] = CLIENT_PROJECTS.slice(0, 5).map((p, i) 
   tag: "Web · Live",
   body: p.quote,
   url: p.url,
+  previewImage: p.url.includes("dronark")
+    ? "/work/dronark-site.png"
+    : p.url.includes("vivid")
+      ? "/work/vivid-preview.png"
+      : p.url.includes("naidile")
+        ? "/work/naidile-preview.png"
+        : p.url.includes("nandinidecor")
+          ? "/work/nandini-site.png"
+          : p.url.includes("deeevents")
+            ? "/work/dee-events-site.png"
+            : undefined,
 }));
