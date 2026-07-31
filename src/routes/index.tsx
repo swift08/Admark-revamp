@@ -5,10 +5,6 @@ import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
 const GridScan = lazy(() => import("@/components/site/GridScan").then(m => ({ default: m.GridScan })));
-import tejasvi from "@/assets/team-tejasvi.webp";
-import harshith from "@/assets/team-harshith.webp";
-import prajwal from "@/assets/team-prajwal.webp";
-import revanth from "@/assets/team-revanth.webp";
 import { Faq } from "@/components/site/Faq";
 import { FooterTagline } from "@/components/site/ScrollReveal";
 import { BackgroundGrid } from "@/components/site/BackgroundGrid";
@@ -17,7 +13,6 @@ import { ServiceGroupCard } from "@/components/site/ServiceGroupCard";
 import { CountUp } from "@/components/site/CountUp";
 import { HeroHeadline } from "@/components/site/HeroHeadline";
 import { SiteHeader } from "@/components/site/SiteHeader";
-import { TeamPhoto } from "@/components/site/TeamPhoto";
 import { CareersTeaser } from "@/components/site/CareersList";
 import { WorkCoverflow, WorkTeaser } from "@/components/site/WorkGrid";
 import { CAREER_OPENINGS } from "@/data/careers";
@@ -107,33 +102,6 @@ const TESTIMONIALS = [
   },
 ];
 
-const LEADERSHIP = [
-  {
-    img: tejasvi,
-    name: "Tejasvi Jois",
-    role: "Founder & CEO",
-    bio: "Tejasvi leads strategy, client architecture and the research methodology that anchors every project at AdMark Digitals and REXU.",
-  },
-  {
-    img: harshith,
-    name: "Harshith V. Malipatil",
-    role: "Co-founder & COO",
-    bio: "Harshith drives operations: client delivery, partnerships and the systems that keep every AdMark project on scope and on time.",
-  },
-  {
-    img: revanth,
-    name: "Revanth Kumar S",
-    role: "CTO",
-    bio: "Revanth leads engineering: product architecture, infrastructure and the technical R&D behind AdMark's SaaS, ERP and platform work.",
-  },
-  {
-    img: prajwal,
-    name: "Prajwal B. P.",
-    role: "CFO",
-    bio: "Prajwal oversees finance and commercial strategy: budgeting, forecasting and the fiscal discipline behind sustainable growth.",
-  },
-] as const;
-
 // ──────────────────────────────────────────────────────────────────────────
 // Page
 // ──────────────────────────────────────────────────────────────────────────
@@ -184,7 +152,6 @@ function Home() {
       <Process />
       <Work />
       <Industries />
-      <Founders />
       <Testimonials />
       <FaqSection />
       <Careers />
@@ -454,47 +421,6 @@ function Industries() {
           <span className="text-muted-foreground"> Industry-agnostic by architecture.</span>
         </h2>
         <WorkCoverflow />
-      </div>
-    </section>
-  );
-}
-
-// ──────────────────────────────────────────────────────────────────────────
-// Founders
-// ──────────────────────────────────────────────────────────────────────────
-
-function Founders() {
-  return (
-    <section className="py-10 md:py-14 border-b border-border-dim">
-      <div className="site-container">
-        <SectionHeader index="05" eyebrow="Leadership" />
-        <h2 className="type-section-title mb-8 max-w-3xl">
-          Young entrepreneurs of Mysore.
-          <span className="text-muted-foreground"> Built by operators, run by engineers.</span>
-        </h2>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-border-dim border border-border-dim">
-          {LEADERSHIP.map((p) => (
-            <article key={p.name} className="bg-background p-5 lg:p-6 group cursor-pointer" tabIndex={0}>
-              <div className="aspect-[3/4] bg-neutral-900 mb-4 overflow-hidden relative">
-                <TeamPhoto
-                  src={p.img}
-                  alt={p.name}
-                  className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-active:grayscale-0 group-focus:grayscale-0"
-                />
-              </div>
-              <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
-                <h3 className="font-display text-xl sm:text-2xl font-bold tracking-tight">
-                  {p.name}
-                </h3>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-brand-red shrink-0">
-                  {p.role}
-                </span>
-              </div>
-              <p className="text-muted-foreground text-sm leading-relaxed">{p.bio}</p>
-            </article>
-          ))}
-        </div>
       </div>
     </section>
   );
