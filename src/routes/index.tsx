@@ -3,7 +3,6 @@ import { useEffect, useRef, lazy, Suspense } from "react";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
-import { cn } from "@/lib/utils";
 const GridScan = lazy(() => import("@/components/site/GridScan").then(m => ({ default: m.GridScan })));
 import { Faq } from "@/components/site/Faq";
 import { FooterTagline } from "@/components/site/ScrollReveal";
@@ -15,6 +14,7 @@ import { HeroHeadline } from "@/components/site/HeroHeadline";
 import { SiteHeader } from "@/components/site/SiteHeader";
 import { CareersTeaser } from "@/components/site/CareersList";
 import { WorkCoverflow, WorkTeaser } from "@/components/site/WorkGrid";
+import { ProcessSteps } from "@/components/site/ProcessSteps";
 import { CAREER_OPENINGS } from "@/data/careers";
 import { SERVICE_GROUPS } from "@/data/services";
 import { CASE_STUDIES, FEATURED_PROJECT } from "@/data/work";
@@ -52,35 +52,6 @@ export const Route = createFileRoute("/")({
 // ──────────────────────────────────────────────────────────────────────────
 // Static content
 // ──────────────────────────────────────────────────────────────────────────
-
-const PROCESS = [
-  {
-    n: "01",
-    t: "Discovery",
-    d: "Audit business model, market gap and user intent. No assumptions.",
-  },
-  { n: "02", t: "Research", d: "Competitive teardown, user signals, technical feasibility study." },
-  {
-    n: "03",
-    t: "Strategy",
-    d: "Wireframes, information architecture, conversion logic, tech stack lock.",
-  },
-  {
-    n: "04",
-    t: "Development",
-    d: "Modular, version-controlled engineering against staged milestones.",
-  },
-  {
-    n: "05",
-    t: "Testing",
-    d: "Performance, security, accessibility and end-to-end QA before release.",
-  },
-  {
-    n: "06",
-    t: "Launch & Scale",
-    d: "Deploy, monitor, iterate. Infrastructure scaled as load demands.",
-  },
-];
 
 const TESTIMONIALS = [
   {
@@ -327,7 +298,7 @@ function Services() {
 // ──────────────────────────────────────────────────────────────────────────
 
 function Process() {
-  const { ref, visible } = useScrollReveal<HTMLOListElement>({ threshold: 0.12 });
+  const { ref, visible } = useScrollReveal<HTMLDivElement>({ threshold: 0.12 });
 
   return (
     <section id="process" className="py-10 md:py-14 border-b border-border-dim">
@@ -344,35 +315,9 @@ function Process() {
           </p>
         </div>
 
-        <ol
-          ref={ref}
-          className="grid grid-cols-1 gap-px border border-border-dim bg-border-dim sm:grid-cols-2 lg:grid-cols-6"
-        >
-          {PROCESS.map((p, i) => (
-            <li
-              key={p.n}
-              className={cn(
-                "group bg-background p-5 transition-[opacity,transform,background-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform hover:bg-muted/30 lg:p-6",
-                visible
-                  ? "translate-x-0 translate-y-0 opacity-100"
-                  : "translate-x-8 translate-y-6 opacity-0",
-              )}
-              style={{ transitionDelay: visible ? `${100 + i * 120}ms` : "0ms" }}
-            >
-              <div className="mb-4 font-display text-4xl font-black text-border-bright transition-colors group-hover:text-brand-red">
-                {p.n}
-              </div>
-              <div className="mb-4 h-px w-full bg-border-bright transition-colors group-hover:bg-brand-red" />
-              <div className="mb-3 font-mono text-[11px] uppercase tracking-widest text-foreground">
-                {p.t}
-              </div>
-              <p className="text-xs leading-relaxed text-muted-foreground">{p.d}</p>
-              {i < PROCESS.length - 1 && (
-                <span className="mt-4 hidden font-mono text-xs text-brand-red lg:inline">→</span>
-              )}
-            </li>
-          ))}
-        </ol>
+        <div ref={ref}>
+          <ProcessSteps visible={visible} />
+        </div>
       </div>
     </section>
   );
