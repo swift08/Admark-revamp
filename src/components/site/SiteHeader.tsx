@@ -1,4 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import logo from "@/assets/logo-admark.webp";
 import { SiteContainer } from "@/components/site/SiteContainer";
@@ -129,9 +130,10 @@ export function SiteHeader() {
             )}
             <a
               href="/#contact"
-              className="px-4 py-2.5 bg-foreground text-background text-sm font-medium hover:bg-brand-red transition-colors"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-brand-red bg-gradient-to-br from-black from-35% via-black to-brand-red px-4 py-2.5 text-sm font-medium text-white transition-[filter] hover:brightness-110"
             >
               Start a project
+              <ArrowUpRight className="size-4 shrink-0 text-brand-red" aria-hidden />
             </a>
           </nav>
 

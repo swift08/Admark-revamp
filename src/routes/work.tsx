@@ -2,8 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { BackgroundGrid } from "@/components/site/BackgroundGrid";
 import { SectionHeader } from "@/components/site/SectionHeader";
 import { SiteHeader } from "@/components/site/SiteHeader";
-import { WorkClientGrid, WorkFeatured } from "@/components/site/WorkGrid";
-import { CLIENT_PROJECTS, FEATURED_PROJECT } from "@/data/work";
+import { WorkClientGrid, WorkFeatured, WorkGrid } from "@/components/site/WorkGrid";
+import {
+  CLIENT_WEBSITES,
+  FEATURED_PROJECT,
+  SOFTWARE_PROJECTS,
+} from "@/data/work";
 
 export const Route = createFileRoute("/work")({
   head: () => ({
@@ -12,7 +16,7 @@ export const Route = createFileRoute("/work")({
       {
         name: "description",
         content:
-          "Live client websites by AdMark Digitals: REXU, Vivid Infrastructures, Naidile, Nandini Decor, DEE Events, and more.",
+          "Software products and client websites by AdMark Digitals: REXU, Rent Flow, Vivid Infrastructures, Naidile, Nandini Decor, DEE Events, and more.",
       },
     ],
   }),
@@ -20,7 +24,8 @@ export const Route = createFileRoute("/work")({
 });
 
 function WorkPage() {
-  const totalProjects = 1 + CLIENT_PROJECTS.length;
+  const projectCount = 1 + SOFTWARE_PROJECTS.length; // REXU featured + grid
+  const websiteCount = CLIENT_WEBSITES.length;
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-background font-body text-foreground">
@@ -36,27 +41,35 @@ function WorkPage() {
           <span className="text-foreground">Our work</span>
         </nav>
 
-        <SectionHeader index="03" eyebrow="Client projects" />
+        <SectionHeader index="03" eyebrow="Our work" />
         <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <h1 className="type-section-title">Built by AdMark.</h1>
           <span className="shrink-0 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {totalProjects} live sites
+            {projectCount} projects · {websiteCount} websites
           </span>
         </div>
 
         <p className="mb-10 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-          Websites and digital platforms we designed and shipped for founders, MSMEs, and
-          organisations across India. Every project below is live in production with a public URL.
+          Software products we ship for real operations, and websites we designed for founders,
+          MSMEs, and organisations across India.
         </p>
 
+        <h2 className="mb-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
+          Projects
+        </h2>
         <div className="mb-10">
           <WorkFeatured project={FEATURED_PROJECT} />
         </div>
+        {SOFTWARE_PROJECTS.length > 0 ? (
+          <div className="mb-16">
+            <WorkGrid studies={SOFTWARE_PROJECTS} />
+          </div>
+        ) : null}
 
         <h2 className="mb-6 font-mono text-[11px] uppercase tracking-widest text-muted-foreground">
-          More client work
+          Websites
         </h2>
-        <WorkClientGrid projects={CLIENT_PROJECTS} />
+        <WorkClientGrid projects={CLIENT_WEBSITES} />
 
         <div className="mt-16 flex flex-col gap-6 border border-border-dim bg-muted/20 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8 lg:p-10">
           <div>

@@ -28,8 +28,6 @@ import {
   CONTACT_WHATSAPP_DISPLAY,
   CONTACT_WHATSAPP_URL,
 } from "@/lib/contact";
-import { Marquee } from "@/components/site/Marquee";
-
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -147,7 +145,6 @@ function Home() {
       <BackgroundGrid />
       <SiteHeader />
       <Hero />
-      <ClientStrip />
       <Services />
       <Process />
       <Work />
@@ -202,85 +199,85 @@ function Hero() {
         </div>
 
         <div className="col-start-1 row-start-1 z-10 w-full">
-          <div className="flex h-svh w-full flex-col justify-end pt-[4.25rem] max-sm:pb-8 sm:pb-0">
-            <div className="site-container max-w-5xl pb-24 sm:pb-12 md:pb-16">
+          <div className="flex h-svh w-full flex-col pt-[calc(6rem+1cm)] max-sm:pb-8 sm:pb-0">
+            <div className="site-container max-w-5xl">
               <p className="text-xs sm:text-sm text-brand-silver mb-4 max-w-md">
                 Research-first digital agency · Est. 2024
               </p>
 
               <HeroHeadline className="font-display text-[clamp(1.75rem,4.25vw,3.75rem)] font-bold leading-[1.05] tracking-tight text-balance max-w-2xl mb-4 sm:mb-5 text-foreground" />
 
-              <div className="grid md:grid-cols-[minmax(0,22rem)_1fr] gap-6 md:gap-10 items-end">
-                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-pretty max-w-md">
-                  We are a research-first studio building digital infrastructure for startups and MSMEs. We build scalable SaaS, custom ERPs, and high-performance websites that become business assets.
+              <div className="max-w-md">
+                <p className="text-sm sm:text-base text-muted-foreground leading-relaxed text-pretty">
+                  Research-led, Design-driven, built to scale.
+                  <br />
+                  Custom digital solutions for startups and enterprises.
                 </p>
-                <div className="flex flex-wrap items-center gap-4 md:justify-end">
+                <div className="mt-5 flex flex-wrap items-center gap-3">
                   <a
                     href="#contact"
-                    className="px-5 py-2.5 bg-brand-red text-white text-xs sm:text-sm font-medium hover:bg-foreground hover:text-background transition-colors"
+                    className="px-5 py-2.5 bg-brand-red text-white text-xs sm:text-sm font-medium transition-colors hover:bg-foreground hover:text-background"
                   >
-                    Talk to us
+                    Contact us
                   </a>
                   <Link
                     to="/work"
-                    className="text-sm text-muted-foreground hover:text-foreground border-b border-border-bright hover:border-foreground pb-0.5 transition-colors"
+                    className="px-5 py-2.5 border border-border-bright text-xs sm:text-sm font-medium text-foreground transition-colors hover:border-foreground hover:bg-foreground hover:text-background"
                   >
-                    See our work
+                    View our work
                   </Link>
                 </div>
               </div>
+            </div>
 
-              <dl className="mt-8 sm:mt-10 pt-5 sm:pt-6 border-t border-border-dim/80 grid grid-cols-3 gap-3 sm:gap-5 max-w-sm sm:max-w-md text-[11px] sm:text-xs">
-                <div className="min-w-0">
-                  <dt className="text-muted-foreground leading-snug">Projects shipped</dt>
-                  <dd className="font-display text-lg sm:text-xl font-semibold mt-0.5 text-foreground tabular-nums">
-                    <CountUp value={25} suffix="+" />
-                  </dd>
+            <div className="mt-auto w-full pb-8 sm:pb-12 md:pb-16">
+              <div className="site-container">
+                <div className="rounded-xl border border-white/15 bg-white/5 px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] backdrop-blur-md sm:px-6 sm:py-6">
+                  <dl className="grid grid-cols-2 gap-y-6 text-[11px] sm:grid-cols-3 sm:text-xs lg:grid-cols-5 lg:gap-y-0 [&>div]:relative [&>div]:px-3 sm:[&>div]:px-4 lg:[&>div]:px-5 [&>div:not(:first-child)]:before:absolute [&>div:not(:first-child)]:before:left-0 [&>div:not(:first-child)]:before:top-1/2 [&>div:not(:first-child)]:before:h-8 [&>div:not(:first-child)]:before:w-px [&>div:not(:first-child)]:before:-translate-y-1/2 [&>div:not(:first-child)]:before:bg-white/20 [&>div:not(:first-child)]:before:content-['']">
+                    <div className="min-w-0">
+                      <div
+                        className="mb-1.5 flex gap-1 text-xl leading-none tracking-wide text-brand-red sm:text-2xl"
+                        aria-label="5 out of 5 stars"
+                      >
+                        <span aria-hidden>★★★★★</span>
+                      </div>
+                      <dd className="text-[10px] font-medium text-foreground sm:text-[11px]">
+                        4.9/5 on Clutch
+                      </dd>
+                      <dt className="mt-0.5 text-muted-foreground leading-snug">25+ client reviews</dt>
+                    </div>
+                    <div className="min-w-0">
+                      <dd className="font-display text-lg font-semibold text-foreground tabular-nums sm:text-xl">
+                        <CountUp value={5} suffix="+" />
+                      </dd>
+                      <dt className="mt-0.5 text-muted-foreground leading-snug">SaaS platforms built</dt>
+                    </div>
+                    <div className="min-w-0">
+                      <dd className="font-display text-lg font-semibold text-foreground tabular-nums sm:text-xl">
+                        <CountUp value={10} suffix="+" delay={80} />
+                      </dd>
+                      <dt className="mt-0.5 text-muted-foreground leading-snug">Websites</dt>
+                    </div>
+                    <div className="min-w-0">
+                      <dd className="font-display text-lg font-semibold text-foreground tabular-nums sm:text-xl">
+                        99.9%
+                      </dd>
+                      <dt className="mt-0.5 text-muted-foreground leading-snug">Client retention</dt>
+                    </div>
+                    <div className="min-w-0">
+                      <dd className="font-display text-lg font-semibold text-foreground tabular-nums sm:text-xl">
+                        <CountUp value={2} suffix="+" delay={160} />
+                      </dd>
+                      <dt className="mt-0.5 text-muted-foreground leading-snug">Years of innovation</dt>
+                    </div>
+                  </dl>
                 </div>
-                <div className="min-w-0">
-                  <dt className="text-muted-foreground text-[11px] sm:text-inherit leading-snug">
-                    Industries
-                  </dt>
-                  <dd className="font-display text-lg sm:text-xl font-semibold mt-0.5 text-foreground tabular-nums">
-                    <CountUp value={9} duration={1400} delay={120} />
-                  </dd>
-                </div>
-                <div className="min-w-0">
-                  <dt className="text-muted-foreground text-[11px] sm:text-inherit leading-snug">
-                    Cities
-                  </dt>
-                  <dd className="font-display text-lg sm:text-xl font-semibold mt-0.5 text-foreground tabular-nums">
-                    <CountUp value={3} duration={1200} delay={240} />
-                  </dd>
-                </div>
-              </dl>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-// ──────────────────────────────────────────────────────────────────────────
-// Client strip
-// ──────────────────────────────────────────────────────────────────────────
-
-function ClientStrip() {
-  return (
-    <Marquee
-      items={[
-        "Aerospace",
-        "Manufacturing",
-        "SaaS",
-        "Wellness",
-        "Logistics",
-        "Hospitality",
-        "Beauty",
-        "Infrastructure",
-        "Education",
-      ]}
-    />
   );
 }
 

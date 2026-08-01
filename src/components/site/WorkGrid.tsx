@@ -331,30 +331,48 @@ export function WorkFeatured({
   );
 }
 
+function ClientProjectCard({ p }: { p: ClientProject }) {
+  const inner = (
+    <>
+      <h3 className="font-display text-xl font-bold tracking-tight transition-colors group-hover:text-brand-red md:text-2xl">
+        {p.name}
+        {p.location ? (
+          <span className="mt-1 block text-sm font-normal text-muted-foreground">
+            {p.location}
+          </span>
+        ) : null}
+      </h3>
+      <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">
+        &ldquo;{p.quote}&rdquo;
+      </blockquote>
+      {p.url ? (
+        <span className="mt-6 font-mono text-[11px] uppercase tracking-widest text-foreground transition-colors group-hover:text-brand-red">
+          View project →
+        </span>
+      ) : null}
+    </>
+  );
+  const className =
+    "group flex h-full flex-col bg-background p-6 transition-colors hover:bg-muted/30 lg:p-7";
+  if (p.url) {
+    return (
+      <ExternalProjectLink key={p.url} href={p.url} className={className}>
+        {inner}
+      </ExternalProjectLink>
+    );
+  }
+  return (
+    <div key={p.name} className={className}>
+      {inner}
+    </div>
+  );
+}
+
 export function WorkClientGrid({ projects }: { projects: ClientProject[] }) {
   return (
     <div className="grid gap-px border border-border-dim bg-border-dim sm:grid-cols-2 lg:grid-cols-3">
       {projects.map((p) => (
-        <ExternalProjectLink
-          key={p.url}
-          href={p.url}
-          className="group flex h-full flex-col bg-background p-6 transition-colors hover:bg-muted/30 lg:p-7"
-        >
-          <h3 className="font-display text-xl font-bold tracking-tight transition-colors group-hover:text-brand-red md:text-2xl">
-            {p.name}
-            {p.location ? (
-              <span className="mt-1 block text-sm font-normal text-muted-foreground">
-                {p.location}
-              </span>
-            ) : null}
-          </h3>
-          <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">
-            &ldquo;{p.quote}&rdquo;
-          </blockquote>
-          <span className="mt-6 font-mono text-[11px] uppercase tracking-widest text-foreground transition-colors group-hover:text-brand-red">
-            View project →
-          </span>
-        </ExternalProjectLink>
+        <ClientProjectCard key={p.name} p={p} />
       ))}
     </div>
   );
@@ -467,8 +485,8 @@ export function WorkTeaser({
             Our work
           </p>
           <p className="font-display text-lg font-bold tracking-tight sm:text-xl">
-            Client websites and brand platforms shipped live, from aerospace to AI, events, and
-            infrastructure.
+            Software products and client websites shipped live — from SaaS and ERP to brand
+            platforms across industries.
           </p>
         </div>
         <Link
