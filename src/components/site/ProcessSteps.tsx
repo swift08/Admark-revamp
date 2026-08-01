@@ -322,54 +322,188 @@ type ProcessStepsProps = {
   visible: boolean;
 };
 
+function RevealLines({
+  text,
+  active,
+  reduce,
+  className,
+}: {
+  text: string;
+  active: boolean;
+  reduce: boolean | null;
+  className?: string;
+}) {
+  const words = text.split(/(\s+)/);
+  return (
+    <p className={className}>
+      {words.map((w, j) =>
+        /^\s+$/.test(w) ? (
+          <span key={j}>{w}</span>
+        ) : (
+          <motion.span
+            key={j}
+            className="inline-block"
+            initial={false}
+            animate={
+              reduce
+                ? { opacity: active ? 1 : 0, y: 0 }
+                : active
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 10 }
+            }
+            transition={{
+              duration: reduce ? 0 : 0.4,
+              delay: reduce || !active ? 0 : 0.2 + j * 0.045,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          >
+            {w}
+          </motion.span>
+        ),
+      )}
+    </p>
+  );
+}
+
 export function ProcessSteps({ visible }: ProcessStepsProps) {
   const reduce = useReducedMotion();
+  const [shown, setShown] = useState(0);
+
+  useEffect(() => {
+    if (!visible) {
+      setShown(0);
+      return;
+    }
+    if (reduce) {
+      setShown(PROCESS_STEPS.length);
+      return;
+    }
+    setShown(1);
+    let n = 1;
+    const id = window.setInterval(() => {
+      n += 1;
+      setShown(n);
+      if (n >= PROCESS_STEPS.length) window.clearInterval(id);
+    }, 1000);
+    return () => window.clearInterval(id);
+  }, [visible, reduce]);
 
   return (
     <ol className="grid grid-cols-1 gap-px border border-border-dim bg-border-dim sm:grid-cols-2 lg:grid-cols-6">
-      {PROCESS_STEPS.map((p, i) => (
-        <li
-          key={p.step}
-          className={cn(
-            "group bg-background p-5 transition-[opacity,transform,background-color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform hover:bg-muted/30 lg:p-6",
-            visible
-              ? "translate-x-0 translate-y-0 opacity-100"
-              : "translate-x-8 translate-y-6 opacity-0",
-          )}
-          style={{ transitionDelay: visible ? `${100 + i * 120}ms` : "0ms" }}
-        >
-          <div className="mb-3 h-10 [perspective:600px]">
+      {PROCESS_STEPS.map((p, i) => {
+        const on = shown > i;
+        return (
+          <motion.li
+            key={p.step}
+            className="group bg-background p-5 hover:bg-muted/30 lg:p-6"
+            initial={false}
+            animate={
+              reduce
+                ? { opacity: on ? 1 : 0, y: 0 }
+                : on
+                  ? { opacity: 1, y: 0 }
+                  : { opacity: 0, y: 40 }
+            }
+            transition={{ duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
             <motion.div
-              className="font-display text-4xl font-black leading-none text-border-bright transition-colors group-hover:text-brand-red"
+              className="mb-3 h-10 [perspective:600px]"
               initial={false}
               animate={
                 reduce
-                  ? { opacity: visible ? 1 : 0 }
-                  : visible
-                    ? { rotateY: 0, opacity: 1 }
-                    : { rotateY: 75, opacity: 0 }
+                  ? { opacity: on ? 1 : 0, y: 0 }
+                  : on
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: 28 }
               }
-              transition={{ duration: 0.65, delay: 0.08 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              style={{ transformStyle: "preserve-3d" }}
+              transition={{ duration: reduce ? 0 : 0.65, ease: [0.22, 1, 0.36, 1] }}
             >
-              {p.step}
+              <motion.div
+                className="font-display text-4xl font-black leading-none text-border-bright transition-colors group-hover:text-brand-red"
+                initial={false}
+                animate={
+                  reduce
+                    ? { opacity: on ? 1 : 0 }
+                    : on
+                      ? { rotateY: 0, opacity: 1 }
+                      : { rotateY: 75, opacity: 0 }
+                }
+                transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+                style={{ transformStyle: "preserve-3d" }}
+              >
+                {p.step}
+              </motion.div>
             </motion.div>
-          </div>
 
-          <div className="mb-3">
-            <StepVisual step={p.step} active={visible} />
-          </div>
+            <motion.div
+              className="mb-3"
+              initial={false}
+              animate={
+                reduce
+                  ? { opacity: on ? 1 : 0, y: 0 }
+                  : on
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: 24 }
+              }
+              transition={{
+                duration: reduce ? 0 : 0.6,
+                delay: reduce || !on ? 0 : 0.08,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <StepVisual step={p.step} active={on} />
+            </motion.div>
 
-          <div className="mb-4 h-px w-full bg-border-bright transition-colors group-hover:bg-brand-red" />
-          <div className="mb-3 font-mono text-[11px] uppercase tracking-widest text-foreground">
-            {p.title}
-          </div>
-          <p className="text-xs leading-relaxed text-muted-foreground">{p.description}</p>
-          {p.actionIcon ? (
-            <span className="mt-4 hidden font-mono text-xs text-brand-red lg:inline">{p.actionIcon}</span>
-          ) : null}
-        </li>
-      ))}
+            <motion.div
+              className="mb-4 h-px w-full bg-border-bright transition-colors group-hover:bg-brand-red"
+              initial={false}
+              animate={on ? { opacity: 1, scaleX: 1 } : { opacity: 0, scaleX: 0.4 }}
+              transition={{ duration: reduce ? 0 : 0.5, delay: reduce || !on ? 0 : 0.12 }}
+              style={{ transformOrigin: "left" }}
+            />
+
+            <motion.div
+              className="mb-3 font-mono text-[11px] uppercase tracking-widest text-foreground"
+              initial={false}
+              animate={
+                reduce
+                  ? { opacity: on ? 1 : 0, y: 0 }
+                  : on
+                    ? { opacity: 1, y: 0 }
+                    : { opacity: 0, y: 16 }
+              }
+              transition={{
+                duration: reduce ? 0 : 0.5,
+                delay: reduce || !on ? 0 : 0.18,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              {p.title}
+            </motion.div>
+
+            <RevealLines
+              text={p.description}
+              active={on}
+              reduce={reduce}
+              className="text-xs leading-relaxed text-muted-foreground"
+            />
+
+            {p.actionIcon ? (
+              <motion.span
+                className="mt-4 hidden font-mono text-xs text-brand-red lg:inline"
+                initial={false}
+                animate={on ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
+                transition={{
+                  duration: reduce ? 0 : 0.4,
+                  delay: reduce || !on ? 0 : 0.55,
+                }}
+              >
+                {p.actionIcon}
+              </motion.span>
+            ) : null}
+          </motion.li>
+        );
+      })}
     </ol>
   );
 }

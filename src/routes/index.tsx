@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, lazy, Suspense, useState } from "react";
-import { useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
@@ -295,26 +295,44 @@ function Services() {
 // ──────────────────────────────────────────────────────────────────────────
 
 function Process() {
-  const { ref, visible } = useScrollReveal<HTMLDivElement>({ threshold: 0.12 });
+  const { ref, visible } = useScrollReveal<HTMLDivElement>({ threshold: 0.12, once: true });
+  const reduce = useReducedMotion();
+  const rise = reduce
+    ? { duration: 0 }
+    : { duration: 0.75, ease: [0.22, 1, 0.36, 1] as const };
 
   return (
     <section id="process" className="py-10 md:py-14 border-b border-border-dim">
-      <div className="site-container">
-        <SectionHeader index="02" eyebrow="How we work" />
+      <div ref={ref} className="site-container">
+        <motion.div
+          initial={false}
+          animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          transition={rise}
+        >
+          <SectionHeader index="02" eyebrow="How we work" />
+        </motion.div>
         <div className="mb-8 grid gap-4 md:grid-cols-[1fr_minmax(0,14rem)] md:items-end">
-          <h2 className="type-section-title">
+          <motion.h2
+            className="type-section-title"
+            initial={false}
+            animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 36 }}
+            transition={{ ...rise, delay: reduce ? 0 : 0.12 }}
+          >
             From research to launch.
             <br />
             <span className="text-muted-foreground">Six stages, same every time.</span>
-          </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          </motion.h2>
+          <motion.p
+            className="text-sm text-muted-foreground leading-relaxed"
+            initial={false}
+            animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
+            transition={{ ...rise, delay: reduce ? 0 : 0.28 }}
+          >
             No surprise scope. You always know what phase we're in and what comes next.
-          </p>
+          </motion.p>
         </div>
 
-        <div ref={ref}>
-          <ProcessSteps visible={visible} />
-        </div>
+        <ProcessSteps visible={visible} />
       </div>
     </section>
   );
