@@ -311,7 +311,7 @@ function Process() {
         >
           <SectionHeader index="02" eyebrow="How we work" />
         </motion.div>
-        <div className="mb-8 grid gap-4 md:grid-cols-[1fr_minmax(0,14rem)] md:items-end">
+        <div className="mb-8 max-w-3xl">
           <motion.h2
             className="type-section-title"
             initial={false}
@@ -323,7 +323,7 @@ function Process() {
             <span className="text-muted-foreground">Six stages, same every time.</span>
           </motion.h2>
           <motion.p
-            className="text-sm text-muted-foreground leading-relaxed"
+            className="mt-4 text-sm text-muted-foreground leading-relaxed"
             initial={false}
             animate={visible ? { opacity: 1, y: 0 } : { opacity: 0, y: 28 }}
             transition={{ ...rise, delay: reduce ? 0 : 0.28 }}
