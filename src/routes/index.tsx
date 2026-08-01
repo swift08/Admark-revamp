@@ -173,10 +173,6 @@ function Hero() {
         <div className="col-start-1 row-start-1 z-10 w-full">
           <div className="flex h-svh w-full flex-col pt-[calc(6rem+1cm)] max-sm:pb-8 sm:pb-0">
             <div className="site-container max-w-5xl">
-              <p className="text-xs sm:text-sm text-brand-silver mb-4 max-w-md">
-                Research-first digital agency · Est. 2024
-              </p>
-
               <HeroHeadline className="font-display text-[clamp(1.75rem,4.25vw,3.75rem)] font-bold leading-[1.05] tracking-tight text-balance max-w-2xl mb-4 sm:mb-5 text-foreground" />
 
               <div className="max-w-md">
@@ -535,9 +531,6 @@ function Contact() {
               <div>
                 <dt className="text-muted-foreground mb-1">Office</dt>
                 <dd>
-                  <span className="mb-3 inline-block border border-brand-red/50 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-widest text-brand-red">
-                    Opening Soon
-                  </span>
                   <p className="text-lg leading-relaxed text-foreground">
                     Prashanth Plaza, 5th Cross, 4th Main,
                     <br />

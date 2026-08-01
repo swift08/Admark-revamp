@@ -276,72 +276,73 @@ export function WorkFeatured({
                   draggable={false}
                 />
               ) : null}
-              {/* Blend image down into the copy */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-background via-background/80 to-transparent"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background via-background/50 to-transparent"
               />
             </div>
           </div>
         </div>
       ) : null}
 
-      <div
-        className={cn(
-          "relative",
-          compact ? "p-6 lg:p-8" : "p-6 lg:p-12",
-          // Soft black wash from copy bottom up through Featured label
-          "bg-gradient-to-t from-background from-20% via-background/95 to-transparent",
-        )}
-      >
-        <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-brand-red">
-          Featured project
-        </p>
-        <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h2
-              className={cn(
-                "font-display font-bold tracking-tight transition-colors group-hover:text-brand-red",
-                compact ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl",
-              )}
-            >
-              {project.name}
-            </h2>
+      <div className="relative">
+        <div className={cn(compact ? "px-6 pt-6 lg:px-8 lg:pt-8" : "px-6 pt-6 lg:px-12 lg:pt-12")}>
+          <p className="mb-4 font-mono text-[11px] uppercase tracking-widest text-brand-red">
+            Featured project
+          </p>
+        </div>
+        <div
+          className={cn(
+            "bg-gradient-to-b from-transparent via-background via-4 to-background",
+            compact ? "px-6 pb-6 lg:px-8 lg:pb-8" : "px-6 pb-6 lg:px-12 lg:pb-12",
+          )}
+        >
+          <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2
+                className={cn(
+                  "font-display font-bold tracking-tight transition-colors group-hover:text-brand-red",
+                  compact ? "text-2xl md:text-3xl" : "text-3xl md:text-4xl",
+                )}
+              >
+                {project.name}
+              </h2>
+              <ExternalProjectLink
+                href={project.url}
+                className="mt-2 inline-block text-sm text-muted-foreground transition-colors hover:text-brand-red"
+              >
+                {project.domain}
+              </ExternalProjectLink>
+            </div>
+            <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              {project.tag}
+            </span>
+          </div>
+          <p
+            className={cn(
+              "max-w-3xl font-display font-medium tracking-tight text-foreground",
+              compact ? "mb-3 text-lg" : "mb-4 text-xl md:text-2xl",
+            )}
+          >
+            {project.headline}
+          </p>
+          <p
+            className={cn(
+              "max-w-3xl leading-relaxed text-muted-foreground",
+              compact ? "text-sm" : "text-base",
+            )}
+          >
+            {project.body}
+          </p>
+          <div className="mt-8 flex items-center justify-between border-t border-border-dim pt-6">
+            <span className="text-xs text-muted-foreground">Live in production</span>
             <ExternalProjectLink
               href={project.url}
-              className="mt-2 inline-block text-sm text-muted-foreground transition-colors hover:text-brand-red"
+              className="text-sm text-foreground transition-colors hover:text-brand-red"
             >
-              {project.domain}
+              View project →
             </ExternalProjectLink>
           </div>
-          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {project.tag}
-          </span>
-        </div>
-        <p
-          className={cn(
-            "max-w-3xl font-display font-medium tracking-tight text-foreground",
-            compact ? "mb-3 text-lg" : "mb-4 text-xl md:text-2xl",
-          )}
-        >
-          {project.headline}
-        </p>
-        <p
-          className={cn(
-            "max-w-3xl leading-relaxed text-muted-foreground",
-            compact ? "text-sm" : "text-base",
-          )}
-        >
-          {project.body}
-        </p>
-        <div className="mt-8 flex items-center justify-between border-t border-border-dim pt-6">
-          <span className="text-xs text-muted-foreground">Live in production</span>
-          <ExternalProjectLink
-            href={project.url}
-            className="text-sm text-foreground transition-colors hover:text-brand-red"
-          >
-            View project →
-          </ExternalProjectLink>
         </div>
       </div>
     </article>
@@ -435,7 +436,7 @@ function WorkStudyCard({ study }: { study: CaseStudy }) {
               ) : null}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/55 to-transparent"
+                className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-background via-background/40 to-transparent"
               />
             </div>
           </div>
@@ -451,7 +452,7 @@ function WorkStudyCard({ study }: { study: CaseStudy }) {
             </span>
           </div>
         </div>
-        <div className="bg-gradient-to-b from-transparent via-background via-8 to-background px-6 pb-6 lg:px-8 lg:pb-8">
+        <div className="bg-gradient-to-b from-transparent via-background via-4 to-background px-6 pb-6 lg:px-8 lg:pb-8">
           <h3 className="mb-3 font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-brand-red md:text-3xl">
             {study.name}
           </h3>
