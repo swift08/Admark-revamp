@@ -55,11 +55,12 @@ export const PROCESS_STEPS: ProcessStep[] = [
   },
 ];
 
-/** Slot matches step number (text-4xl / 2.25rem) + py for animation room. */
+/** Fixed height so every step’s divider lines up across the grid. */
 const VISUAL_SLOT =
-  "relative flex h-14 w-full items-center justify-end overflow-visible py-2 text-muted-foreground";
+  "relative flex h-32 w-full shrink-0 items-end justify-end overflow-visible text-muted-foreground";
 
-const CODE_SNIPPET = "const app = {\n  ship: true,\n};";
+const CODE_SNIPPET =
+  "const app = createApp({\n  ship: true,\n  test: \"qa-ready\",\n  scale: \"live-production\",\n  watch: \"metrics\",\n});";
 
 function CodeTypewriter({ play }: { play: boolean }) {
   const [n, setN] = useState(play ? 0 : CODE_SNIPPET.length);
@@ -94,7 +95,7 @@ function CodeTypewriter({ play }: { play: boolean }) {
   }, [play, n, phase]);
 
   return (
-    <pre className="m-0 whitespace-pre font-mono text-xs leading-snug text-brand-red sm:text-sm">
+    <pre className="m-0 min-h-[6.5em] min-w-[16ch] whitespace-pre text-left font-mono text-xs leading-snug text-brand-red sm:min-w-[20ch] sm:text-sm">
       {CODE_SNIPPET.slice(0, n)}
       <span
         aria-hidden
@@ -116,29 +117,29 @@ function StepVisual({ step, active }: { step: string; active: boolean }) {
   switch (step) {
     case "01":
       body = (
-        <div className="relative size-[1em] text-4xl leading-none">
+        <div className="relative size-24 leading-none">
           <motion.div
             className="absolute inset-0"
             initial={false}
             animate={play ? { opacity: 1 } : { opacity: 0.5 }}
             transition={{ duration: 0.6 }}
           >
-            <FileText className="size-[1em]" strokeWidth={1.1} />
+            <FileText className="size-full" strokeWidth={1.1} />
           </motion.div>
           <motion.div
             className="absolute right-0 top-1/2 -translate-y-1/2 text-brand-red"
             initial={false}
-            animate={play ? { x: [0, -10, -4], y: [0, 6, 10] } : { x: -4, y: 4 }}
+            animate={play ? { x: [0, -14, -6], y: [0, 8, 14] } : { x: -6, y: 6 }}
             transition={{ duration: 2.2, ease: "easeInOut", repeat: play ? Infinity : 0, repeatDelay: 0.8 }}
           >
-            <Search className="size-[0.45em]" strokeWidth={1.75} />
+            <Search className="size-10" strokeWidth={1.75} />
           </motion.div>
         </div>
       );
       break;
     case "02":
       body = (
-        <div className="flex h-[1em] items-end gap-1.5 text-4xl leading-none">
+        <div className="flex h-[1em] origin-bottom-right scale-[2] items-end gap-1.5 text-4xl leading-none">
           {[40, 70, 50, 85].map((h, i) => (
             <motion.span
               key={i}
@@ -171,7 +172,7 @@ function StepVisual({ step, active }: { step: string; active: boolean }) {
       break;
     case "03":
       body = (
-        <div className="relative size-[1em] text-4xl leading-none">
+        <div className="relative size-28 text-[7rem] leading-none">
           {(
             [
               { key: "bl", className: "absolute bottom-0 left-0", delay: 0 },
@@ -219,7 +220,7 @@ function StepVisual({ step, active }: { step: string; active: boolean }) {
       break;
     case "05":
       body = (
-        <div className="relative size-[1em] text-4xl leading-none">
+        <div className="relative size-24 leading-none">
           <motion.div
             className="absolute inset-0 text-brand-red"
             initial={false}
@@ -239,11 +240,11 @@ function StepVisual({ step, active }: { step: string; active: boolean }) {
             <Shield className="size-full" strokeWidth={1.25} />
           </motion.div>
           <motion.div
-            className="absolute inset-0 flex items-center justify-center pt-[0.06em] text-emerald-500"
+            className="absolute inset-0 z-10 flex items-center justify-center pt-1.5 text-emerald-500"
             initial={false}
             animate={
               play
-                ? { scale: [0, 0, 0, 1.2, 1], opacity: [0, 0, 0, 1, 1] }
+                ? { scale: [0, 0, 0, 1.15, 1], opacity: [0, 0, 0, 1, 1] }
                 : { scale: 1, opacity: 0.85 }
             }
             transition={{
@@ -254,35 +255,44 @@ function StepVisual({ step, active }: { step: string; active: boolean }) {
               repeatDelay: 0.55,
             }}
           >
-            <CheckSquare className="size-[0.5em]" strokeWidth={2.25} />
+            <CheckSquare className="size-8" strokeWidth={2.25} />
           </motion.div>
         </div>
       );
       break;
     case "06":
       body = (
-        <div className="relative h-[1em] w-[3.25em] overflow-visible text-4xl leading-none">
+        <div
+          className="relative h-32 w-full overflow-hidden text-5xl leading-none"
+          style={{
+            WebkitMaskImage:
+              "linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%)",
+            maskImage:
+              "linear-gradient(to right, transparent 0%, black 14%, black 86%, transparent 100%)",
+          }}
+        >
           <motion.div
-            className="absolute top-1/2 -mt-[0.5em] text-brand-red"
+            className="absolute text-brand-red"
             initial={false}
             animate={
               play
                 ? {
-                    // under the number: enter left → turn → shoot out right
-                    left: ["-20%", "28%", "28%", "28%", "130%"],
-                    y: [0, 0, 0, 0, -4],
-                    opacity: [0, 1, 1, 1, 0],
-                    rotate: [10, 10, 55, 55, 60],
-                    scale: [0.85, 1, 1, 1, 1.05],
+                    // rise from under → cross → fade out past right edge
+                    left: ["0%", "8%", "100%"],
+                    top: ["100%", "50%", "35%"],
+                    y: ["0%", "-50%", "-50%"],
+                    opacity: [0, 1, 0],
+                    rotate: [30, 55, 55],
+                    scale: [0.85, 1, 1],
                   }
-                : { left: "28%", y: 0, opacity: 1, rotate: 55, scale: 1 }
+                : { left: "8%", top: "50%", y: "-50%", opacity: 1, rotate: 55, scale: 1 }
             }
             transition={{
-              duration: 3.6,
+              duration: 3.2,
               ease: [0.22, 1, 0.36, 1],
-              times: [0, 0.18, 0.32, 0.55, 1],
+              times: [0, 0.28, 1],
               repeat: play ? Infinity : 0,
-              repeatDelay: 0.45,
+              repeatDelay: 0.5,
             }}
           >
             <Rocket className="size-[1em]" strokeWidth={1.4} />
@@ -319,9 +329,9 @@ export function ProcessSteps({ visible }: ProcessStepsProps) {
           )}
           style={{ transitionDelay: visible ? `${100 + i * 120}ms` : "0ms" }}
         >
-          <div className="mb-3 [perspective:600px]">
+          <div className="mb-3 h-10 [perspective:600px]">
             <motion.div
-              className="font-display text-4xl font-black text-border-bright transition-colors group-hover:text-brand-red"
+              className="font-display text-4xl font-black leading-none text-border-bright transition-colors group-hover:text-brand-red"
               initial={false}
               animate={
                 reduce

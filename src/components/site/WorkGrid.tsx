@@ -11,6 +11,37 @@ import { WORK_SHOWCASE } from "@/data/work";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 import { cn } from "@/lib/utils";
 
+const PREVIEW_OPEN_DELAY_MS = 500;
+
+/** Delay open on scroll-in; close as soon as the card leaves the viewport. */
+function usePreviewExpand(visible: boolean, hovered: boolean) {
+  const [open, setOpen] = useState(false);
+  const [mediaReady, setMediaReady] = useState(false);
+
+  useEffect(() => {
+    if (hovered) {
+      setOpen(true);
+      return;
+    }
+    if (visible) {
+      const id = window.setTimeout(() => setOpen(true), PREVIEW_OPEN_DELAY_MS);
+      return () => clearTimeout(id);
+    }
+    setOpen(false);
+  }, [visible, hovered]);
+
+  useEffect(() => {
+    if (open) {
+      setMediaReady(true);
+      return;
+    }
+    const id = window.setTimeout(() => setMediaReady(false), 750);
+    return () => clearTimeout(id);
+  }, [open]);
+
+  return { open, mediaReady };
+}
+
 function ExternalProjectLink({
   href,
   className,
@@ -74,7 +105,6 @@ function CoverflowCard({ card, active }: { card: WorkShowcase; active: boolean }
         <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground sm:text-sm">
           {card.body}
         </p>
-        <span className="mt-2 inline-block text-xs text-foreground">View work →</span>
       </div>
     </article>
   );
@@ -161,23 +191,7 @@ export function WorkCoverflow({ cards = WORK_SHOWCASE }: { cards?: WorkShowcase[
               >
                 <div className="relative" style={{ transformStyle: "preserve-3d" }}>
                   <CoverflowCard card={card} active={isCenter} />
-                  {isCenter ? (
-                    card.url.startsWith("http") ? (
-                      <ExternalProjectLink
-                        href={card.url}
-                        className="absolute inset-0 z-10"
-                        aria-label={`View ${card.name}`}
-                      >
-                        <span className="sr-only">View {card.name}</span>
-                      </ExternalProjectLink>
-                    ) : (
-                      <Link
-                        to="/work"
-                        className="absolute inset-0 z-10"
-                        aria-label={`View ${card.name}`}
-                      />
-                    )
-                  ) : isPeek ? (
+                  {isPeek ? (
                     <button
                       type="button"
                       className="absolute inset-0 z-10 cursor-pointer"
@@ -230,7 +244,8 @@ export function WorkFeatured({
     threshold: 0.45,
     rootMargin: "0px",
   });
-  const expanded = Boolean(project.previewImage) && (hovered || visible);
+  const preview = usePreviewExpand(visible, hovered);
+  const expanded = Boolean(project.previewImage) && preview.open;
 
   return (
     <article
@@ -253,12 +268,14 @@ export function WorkFeatured({
         >
           <div className="min-h-0 overflow-hidden">
             <div className="relative h-44 sm:h-56 md:h-72 lg:h-80">
-              <img
-                src={project.previewImage}
-                alt={`${project.name} website preview`}
-                className="h-full w-full object-cover object-top"
-                draggable={false}
-              />
+              {preview.mediaReady ? (
+                <img
+                  src={project.previewImage}
+                  alt={`${project.name} website preview`}
+                  className="h-full w-full object-cover object-top"
+                  draggable={false}
+                />
+              ) : null}
               {/* Blend image down into the copy */}
               <div
                 aria-hidden
@@ -389,7 +406,8 @@ function WorkStudyCard({ study }: { study: CaseStudy }) {
     threshold: 0.45,
     rootMargin: "0px",
   });
-  const expanded = Boolean(study.previewImage) && (hovered || visible);
+  const preview = usePreviewExpand(visible, hovered);
+  const expanded = Boolean(study.previewImage) && preview.open;
 
   return (
     <article
@@ -407,12 +425,14 @@ function WorkStudyCard({ study }: { study: CaseStudy }) {
         >
           <div className="min-h-0 overflow-hidden">
             <div className="relative h-40 sm:h-48 md:h-56">
-              <img
-                src={study.previewImage}
-                alt={`${study.name} website preview`}
-                className="h-full w-full object-cover object-top"
-                draggable={false}
-              />
+              {preview.mediaReady ? (
+                <img
+                  src={study.previewImage}
+                  alt={`${study.name} website preview`}
+                  className="h-full w-full object-cover object-top"
+                  draggable={false}
+                />
+              ) : null}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background via-background/55 to-transparent"
@@ -422,33 +442,37 @@ function WorkStudyCard({ study }: { study: CaseStudy }) {
         </div>
       ) : null}
 
-      <div className="relative bg-gradient-to-t from-background from-20% via-background/95 to-transparent p-6 lg:p-8">
-        <div className="mb-6 flex flex-wrap items-start justify-between gap-2">
-          <span className="shrink-0 text-xs text-muted-foreground">Ref {study.ref}</span>
-          <span className="max-w-[60%] text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-            {study.tag}
-          </span>
-        </div>
-        <h3 className="mb-3 font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-brand-red md:text-3xl">
-          {study.name}
-        </h3>
-        <p className="max-w-md text-sm leading-relaxed text-muted-foreground line-clamp-4">
-          {study.body}
-        </p>
-        <div className="mt-8 flex items-center justify-between border-t border-border-dim pt-6">
-          <span className="text-xs text-muted-foreground">Live in production</span>
-          {study.url ? (
-            <ExternalProjectLink
-              href={study.url}
-              className="text-sm text-foreground transition-colors hover:text-brand-red"
-            >
-              View project →
-            </ExternalProjectLink>
-          ) : (
-            <span className="text-sm text-foreground transition-colors group-hover:text-brand-red">
-              View project →
+      <div className="relative">
+        <div className="px-6 pt-6 lg:px-8 lg:pt-8">
+          <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+            <span className="shrink-0 text-xs text-muted-foreground">Ref {study.ref}</span>
+            <span className="max-w-[60%] text-right font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              {study.tag}
             </span>
-          )}
+          </div>
+        </div>
+        <div className="bg-gradient-to-b from-transparent via-background via-8 to-background px-6 pb-6 lg:px-8 lg:pb-8">
+          <h3 className="mb-3 font-display text-2xl font-bold tracking-tight transition-colors group-hover:text-brand-red md:text-3xl">
+            {study.name}
+          </h3>
+          <p className="max-w-md text-sm leading-relaxed text-muted-foreground line-clamp-4">
+            {study.body}
+          </p>
+          <div className="mt-8 flex items-center justify-between border-t border-border-dim pt-6">
+            <span className="text-xs text-muted-foreground">Live in production</span>
+            {study.url ? (
+              <ExternalProjectLink
+                href={study.url}
+                className="text-sm text-foreground transition-colors hover:text-brand-red"
+              >
+                View project →
+              </ExternalProjectLink>
+            ) : (
+              <span className="text-sm text-foreground transition-colors group-hover:text-brand-red">
+                View project →
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </article>
