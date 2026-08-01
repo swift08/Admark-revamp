@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, lazy, Suspense } from "react";
+import { useEffect, useRef, lazy, Suspense, useState } from "react";
+import { useReducedMotion } from "framer-motion";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
@@ -372,27 +373,69 @@ function Industries() {
 // ──────────────────────────────────────────────────────────────────────────
 
 function Testimonials() {
+  const [active, setActive] = useState(0);
+  const reduceMotion = useReducedMotion();
+  const n = TESTIMONIALS.length;
+  const t = TESTIMONIALS[active];
+
+  useEffect(() => {
+    if (n < 2 || reduceMotion) return;
+    const id = window.setInterval(() => setActive((i) => (i + 1) % n), 5000);
+    return () => window.clearInterval(id);
+  }, [n, reduceMotion, active]);
+
   return (
-    <section className="py-10 md:py-14 border-b border-border-dim">
+    <section className="border-b border-border-dim py-10 md:py-14">
       <div className="site-container">
         <SectionHeader index="06" eyebrow="Client notes" />
-        <div className="grid md:grid-cols-3 gap-px bg-border-dim border border-border-dim">
-          {TESTIMONIALS.map((t, i) => (
-            <figure key={i} className="bg-background flex flex-col p-6 lg:p-8">
-              <blockquote className="font-display text-xl md:text-2xl font-medium tracking-tight leading-snug text-foreground mb-8 flex-1">
-                "{t.q}"
-              </blockquote>
-              <figcaption className="border-t border-border-dim pt-4">
-                <div className="font-mono text-[11px] uppercase tracking-widest text-foreground">
-                  {t.n}
-                </div>
-                <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mt-1">
-                  {t.c}
-                </div>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+        <figure className="relative flex flex-col border border-border-dim bg-background p-5 sm:p-6 lg:p-8">
+          <div
+            className="mb-3 flex gap-1 text-xl leading-none text-brand-red sm:text-2xl md:text-3xl"
+            aria-label="Rated 5 out of 5 stars"
+          >
+            {Array.from({ length: 5 }, (_, i) => (
+              <span key={i} aria-hidden>
+                ★
+              </span>
+            ))}
+          </div>
+          <blockquote
+            key={active}
+            className={
+              reduceMotion
+                ? "font-display text-xl font-medium leading-snug tracking-tight text-foreground sm:text-2xl md:text-3xl"
+                : "animate-in fade-in duration-700 font-display text-xl font-medium leading-snug tracking-tight text-foreground sm:text-2xl md:text-3xl"
+            }
+          >
+            "{t.q}"
+          </blockquote>
+          <figcaption className="mt-5 border-t border-border-dim pt-4">
+            <div className="font-mono text-[11px] uppercase tracking-widest text-foreground">
+              {t.n}
+            </div>
+            <div className="mt-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+              {t.c}
+            </div>
+          </figcaption>
+
+          <div className="mt-5 flex gap-2" role="tablist" aria-label="Client notes">
+            {TESTIMONIALS.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                role="tab"
+                aria-selected={i === active}
+                aria-label={`Show note ${i + 1}`}
+                className={
+                  i === active
+                    ? "h-1.5 w-6 bg-brand-red transition-[width,background-color]"
+                    : "h-1.5 w-1.5 bg-border-bright transition-[width,background-color] hover:bg-muted-foreground"
+                }
+                onClick={() => setActive(i)}
+              />
+            ))}
+          </div>
+        </figure>
       </div>
     </section>
   );
