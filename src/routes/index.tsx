@@ -195,6 +195,26 @@ function Hero() {
                     View our work
                   </Link>
                 </div>
+
+                <div className="mt-8">
+                  <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                    Trusted by
+                  </p>
+                  <div className="flex flex-wrap items-center gap-8 sm:gap-10">
+                    <a
+                      href="https://www.alliancesquare.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="opacity-80 transition-opacity hover:opacity-100"
+                    >
+                      <img
+                        src="/brands/alliance-square.png"
+                        alt="Alliance Square"
+                        className="h-7 w-auto max-w-[8.5rem] object-contain object-left brightness-0 invert sm:h-8 sm:max-w-[10rem]"
+                      />
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -464,7 +484,7 @@ function FaqSection() {
     <section className="py-10 md:py-14 border-b border-border-dim">
       <div className="site-container">
         <SectionHeader index="07" eyebrow="FAQ" />
-        <h2 className="type-section-title mb-8 max-w-3xl">
+        <h2 className="type-section-title mb-10 max-w-3xl md:mb-12">
           Questions we've answered <br className="hidden sm:block" /> a hundred times.
         </h2>
         <Faq />

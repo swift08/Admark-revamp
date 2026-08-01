@@ -38,7 +38,7 @@ export function Faq() {
             <button
               type="button"
               onClick={() => setOpen(isOpen ? null : i)}
-              className="group flex w-full min-h-12 items-start justify-between gap-4 py-4 sm:gap-8 sm:py-5 text-left transition-colors hover:bg-muted/40"
+              className="group flex w-full min-h-14 items-start justify-between gap-4 py-6 sm:gap-8 sm:py-8 text-left transition-colors hover:bg-muted/40"
               suppressHydrationWarning
             >
               <div className="flex min-w-0 items-start gap-3 sm:gap-6">
@@ -58,7 +58,7 @@ export function Faq() {
               style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
             >
               <div className="overflow-hidden">
-                <p className="max-w-2xl pb-6 pl-10 pr-4 text-sm leading-relaxed text-muted-foreground sm:pb-8 sm:pl-[3.5rem] sm:pr-12 sm:text-base">
+                <p className="max-w-2xl pb-8 pl-10 pr-4 text-sm leading-relaxed text-muted-foreground sm:pb-10 sm:pl-[3.5rem] sm:pr-12 sm:text-base">
                   {it.a}
                 </p>
               </div>
