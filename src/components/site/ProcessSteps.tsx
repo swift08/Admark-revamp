@@ -95,7 +95,7 @@ function CodeTypewriter({ play }: { play: boolean }) {
   }, [play, n, phase]);
 
   return (
-    <pre className="m-0 min-h-[6.5em] min-w-[16ch] whitespace-pre text-left font-mono text-xs leading-snug text-brand-red sm:min-w-[20ch] sm:text-sm">
+    <pre className="m-0 max-h-full max-w-full overflow-hidden whitespace-pre font-mono text-[10px] leading-snug text-brand-red sm:text-xs">
       {CODE_SNIPPET.slice(0, n)}
       <span
         aria-hidden
@@ -240,7 +240,7 @@ function StepVisual({ step, active }: { step: string; active: boolean }) {
             <Shield className="size-full" strokeWidth={1.25} />
           </motion.div>
           <motion.div
-            className="absolute inset-0 z-10 flex items-center justify-center pt-1.5 text-emerald-500"
+            className="absolute inset-0 z-10 flex items-center justify-center text-emerald-500"
             initial={false}
             animate={
               play
@@ -305,7 +305,16 @@ function StepVisual({ step, active }: { step: string; active: boolean }) {
   }
 
   return (
-    <div className={cn(VISUAL_SLOT, step === "06" && "justify-start")}>{body}</div>
+    <div
+      className={cn(
+        VISUAL_SLOT,
+        step === "06" && "justify-start",
+        step === "05" && "items-center justify-center",
+        step === "04" && "min-w-0 overflow-hidden",
+      )}
+    >
+      {body}
+    </div>
   );
 }
 
