@@ -1,5 +1,6 @@
 import tejasviPhoto from "@/assets/team-tejasvi.webp";
 import harshithPhoto from "@/assets/team-harshith.jpeg";
+import revanthPhoto from "@/assets/team-revanth.png";
 import prajwalPhoto from "@/assets/team-prajwal.png";
 
 export type ScanProfile = {
@@ -50,6 +51,10 @@ export const SCAN_PROFILES: ScanProfile[] = [
     initials: "RK",
     description:
       "Chief Technology Officer driving product engineering across AdMark Digitals and REXU.",
+    image: revanthPhoto,
+    linkedin: "https://www.linkedin.com/in/revanth-kumar-s-a43672218/",
+    phone: "8413005243",
+    whatsapp: "918413005243",
   },
   {
     slug: "prajwal-bp",
@@ -59,6 +64,9 @@ export const SCAN_PROFILES: ScanProfile[] = [
     description:
       "Chief Financial Officer guiding finance and strategy for AdMark Digitals and REXU.",
     image: prajwalPhoto,
+    linkedin: "https://www.linkedin.com/in/prajwal-prashanth-479348228/",
+    phone: "7259588826",
+    whatsapp: "917259588826",
   },
 ];
 
