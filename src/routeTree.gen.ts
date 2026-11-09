@@ -13,7 +13,9 @@ import { Route as WorkRouteImport } from './routes/work'
 import { Route as ScanRouteImport } from './routes/scan'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ScanIndexRouteImport } from './routes/scan/index'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
+import { Route as ScanSlugRouteImport } from './routes/scan/$slug'
 
 const WorkRoute = WorkRouteImport.update({
   id: '/work',
@@ -35,46 +37,76 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScanIndexRoute = ScanIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ScanRoute,
+} as any)
 const ServicesSlugRoute = ServicesSlugRouteImport.update({
   id: '/services/$slug',
   path: '/services/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScanSlugRoute = ScanSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ScanRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/careers': typeof CareersRoute
-  '/scan': typeof ScanRoute
+  '/scan': typeof ScanRouteWithChildren
   '/work': typeof WorkRoute
+  '/scan/$slug': typeof ScanSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/scan/': typeof ScanIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/careers': typeof CareersRoute
-  '/scan': typeof ScanRoute
   '/work': typeof WorkRoute
+  '/scan/$slug': typeof ScanSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/scan': typeof ScanIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/careers': typeof CareersRoute
-  '/scan': typeof ScanRoute
+  '/scan': typeof ScanRouteWithChildren
   '/work': typeof WorkRoute
+  '/scan/$slug': typeof ScanSlugRoute
   '/services/$slug': typeof ServicesSlugRoute
+  '/scan/': typeof ScanIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/careers' | '/scan' | '/work' | '/services/$slug'
+  fullPaths:
+    | '/'
+    | '/careers'
+    | '/scan'
+    | '/work'
+    | '/scan/$slug'
+    | '/services/$slug'
+    | '/scan/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/careers' | '/scan' | '/work' | '/services/$slug'
-  id: '__root__' | '/' | '/careers' | '/scan' | '/work' | '/services/$slug'
+  to: '/' | '/careers' | '/work' | '/scan/$slug' | '/services/$slug' | '/scan'
+  id:
+    | '__root__'
+    | '/'
+    | '/careers'
+    | '/scan'
+    | '/work'
+    | '/scan/$slug'
+    | '/services/$slug'
+    | '/scan/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CareersRoute: typeof CareersRoute
-  ScanRoute: typeof ScanRoute
+  ScanRoute: typeof ScanRouteWithChildren
   WorkRoute: typeof WorkRoute
   ServicesSlugRoute: typeof ServicesSlugRoute
 }
@@ -109,6 +141,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scan/': {
+      id: '/scan/'
+      path: '/'
+      fullPath: '/scan/'
+      preLoaderRoute: typeof ScanIndexRouteImport
+      parentRoute: typeof ScanRoute
+    }
     '/services/$slug': {
       id: '/services/$slug'
       path: '/services/$slug'
@@ -116,13 +155,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scan/$slug': {
+      id: '/scan/$slug'
+      path: '/$slug'
+      fullPath: '/scan/$slug'
+      preLoaderRoute: typeof ScanSlugRouteImport
+      parentRoute: typeof ScanRoute
+    }
   }
 }
+
+interface ScanRouteChildren {
+  ScanSlugRoute: typeof ScanSlugRoute
+  ScanIndexRoute: typeof ScanIndexRoute
+}
+
+const ScanRouteChildren: ScanRouteChildren = {
+  ScanSlugRoute: ScanSlugRoute,
+  ScanIndexRoute: ScanIndexRoute,
+}
+
+const ScanRouteWithChildren = ScanRoute._addFileChildren(ScanRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CareersRoute: CareersRoute,
-  ScanRoute: ScanRoute,
+  ScanRoute: ScanRouteWithChildren,
   WorkRoute: WorkRoute,
   ServicesSlugRoute: ServicesSlugRoute,
 }

@@ -11,7 +11,7 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export function WhatsAppFloat() {
   const pathname = useRouterState({ select: (state) => state.location.pathname });
-  if (pathname === "/scan") return null;
+  if (pathname === "/scan" || pathname.startsWith("/scan/")) return null;
 
   return (
     <a
