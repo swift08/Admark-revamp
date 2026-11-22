@@ -28,6 +28,8 @@ import {
   CONTACT_SECONDARY_PHONE_URL,
   CONTACT_WHATSAPP_DISPLAY,
   CONTACT_WHATSAPP_URL,
+  WEB3FORMS_ACCESS_KEY,
+  WEB3FORMS_ENDPOINT,
 } from "@/lib/contact";
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -517,6 +519,42 @@ function Careers() {
 // ──────────────────────────────────────────────────────────────────────────
 
 function Contact() {
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [statusMessage, setStatusMessage] = useState("");
+
+  async function handleContactSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    setStatus("sending");
+    setStatusMessage("Sending...");
+
+    const formData = new FormData(form);
+    formData.append("access_key", WEB3FORMS_ACCESS_KEY);
+    formData.append("subject", "New project brief — AdMark Digitals");
+    formData.append("from_name", "AdMark Digitals Website");
+
+    try {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
+        method: "POST",
+        body: formData,
+      });
+      const data = (await response.json()) as { success?: boolean; message?: string };
+
+      if (response.ok && data.success) {
+        setStatus("success");
+        setStatusMessage("Message sent. We'll reply within one business day.");
+        form.reset();
+        return;
+      }
+
+      setStatus("error");
+      setStatusMessage(data.message || "Something went wrong. Please try again.");
+    } catch {
+      setStatus("error");
+      setStatusMessage("Something went wrong. Please try again.");
+    }
+  }
+
   return (
     <section id="contact" className="py-10 md:py-14 border-b border-border-dim bg-surface">
       <div className="site-container">
@@ -585,7 +623,7 @@ function Contact() {
           </div>
 
           <form
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={handleContactSubmit}
             className="bg-background border border-border-dim p-6 lg:p-8"
           >
             <p className="text-sm text-muted-foreground mb-8">New project brief</p>
@@ -595,6 +633,7 @@ function Contact() {
                   type="text"
                   id="contact-name"
                   name="name"
+                  required
                   className="w-full bg-transparent border-b border-border-bright py-3 text-sm text-foreground focus:border-brand-red outline-none transition-colors"
                   placeholder="Your name"
                   suppressHydrationWarning
@@ -605,6 +644,7 @@ function Contact() {
                   type="email"
                   id="contact-email"
                   name="email"
+                  required
                   className="w-full bg-transparent border-b border-border-bright py-3 text-sm text-foreground focus:border-brand-red outline-none transition-colors"
                   placeholder="you@company.com"
                   suppressHydrationWarning
@@ -614,23 +654,42 @@ function Contact() {
                 <select
                   id="contact-requirement"
                   name="requirement"
+                  required
                   className="w-full bg-transparent border-b border-border-bright py-3 text-sm text-foreground focus:border-brand-red outline-none transition-colors appearance-none"
                   suppressHydrationWarning
                 >
-                  <option className="bg-background">Custom website</option>
-                  <option className="bg-background">SaaS build</option>
-                  <option className="bg-background">Custom ERP</option>
-                  <option className="bg-background">E-commerce platform</option>
-                  <option className="bg-background">Mobile application</option>
-                  <option className="bg-background">Research paper</option>
-                  <option className="bg-background">Internship enquiry</option>
+                  <option className="bg-background" value="">
+                    Select a requirement
+                  </option>
+                  <option className="bg-background" value="Custom website">
+                    Custom website
+                  </option>
+                  <option className="bg-background" value="SaaS build">
+                    SaaS build
+                  </option>
+                  <option className="bg-background" value="Custom ERP">
+                    Custom ERP
+                  </option>
+                  <option className="bg-background" value="E-commerce platform">
+                    E-commerce platform
+                  </option>
+                  <option className="bg-background" value="Mobile application">
+                    Mobile application
+                  </option>
+                  <option className="bg-background" value="Research paper">
+                    Research paper
+                  </option>
+                  <option className="bg-background" value="Internship enquiry">
+                    Internship enquiry
+                  </option>
                 </select>
               </Field>
               <Field label="Project Notes">
                 <textarea
                   id="contact-notes"
-                  name="notes"
+                  name="message"
                   rows={3}
+                  required
                   className="w-full bg-transparent border-b border-border-bright py-3 text-sm text-foreground focus:border-brand-red outline-none transition-colors resize-none"
                   placeholder="Tell us what you're trying to build."
                   suppressHydrationWarning
@@ -639,11 +698,27 @@ function Contact() {
               <button
                 type="submit"
                 id="contact-submit"
-                className="mt-4 w-full py-4 bg-brand-red text-white text-sm font-medium hover:bg-foreground hover:text-background transition-colors"
+                disabled={status === "sending"}
+                className="mt-4 w-full py-4 bg-brand-red text-white text-sm font-medium hover:bg-foreground hover:text-background transition-colors disabled:opacity-60 disabled:pointer-events-none"
                 suppressHydrationWarning
               >
-                Send message
+                {status === "sending" ? "Sending..." : "Send message"}
               </button>
+              {statusMessage ? (
+                <p
+                  className={`text-sm ${
+                    status === "success"
+                      ? "text-emerald-500"
+                      : status === "error"
+                        ? "text-brand-red"
+                        : "text-muted-foreground"
+                  }`}
+                  role="status"
+                  aria-live="polite"
+                >
+                  {statusMessage}
+                </p>
+              ) : null}
             </div>
           </form>
         </div>

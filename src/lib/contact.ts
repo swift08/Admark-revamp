@@ -8,3 +8,6 @@ export const CONTACT_SECONDARY_PHONE_URL = `tel:+${CONTACT_SECONDARY_PHONE_E164}
 export const CONTACT_WHATSAPP_E164 = "919686658055";
 export const CONTACT_WHATSAPP_DISPLAY = "+91 96866 58055";
 export const CONTACT_WHATSAPP_URL = `https://wa.me/${CONTACT_WHATSAPP_E164}`;
+
+export const WEB3FORMS_ACCESS_KEY = "ff1a9fb8-b30e-4ca6-a62a-df5edf1d89a2";
+export const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
