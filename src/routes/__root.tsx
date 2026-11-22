@@ -10,6 +10,9 @@ import {
 
 import { WhatsAppFloat } from "@/components/site/WhatsAppFloat";
 import { MassiveSchema } from "@/components/seo/MassiveSchema";
+import { GtmNoscript } from "@/components/analytics/GoogleTagManager";
+import { GtmRouteTracker } from "@/components/analytics/GtmRouteTracker";
+import { GTM_ID, getGtmBootstrapScript, isGtmConfigured } from "@/lib/gtm";
 import logoAdmark from "@/assets/logo-admark.webp";
 import appCss from "../styles.css?url";
 
@@ -90,16 +93,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preload", href: logoAdmark, as: "image", type: "image/webp" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
+      ...(isGtmConfigured()
+        ? [{ rel: "preconnect", href: "https://www.googletagmanager.com" as const }]
+        : []),
       {
         rel: "preload",
         href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
-        as: "style"
+        as: "style",
       },
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap",
       },
     ],
+    scripts: isGtmConfigured() && GTM_ID
+      ? [
+          {
+            children: getGtmBootstrapScript(GTM_ID),
+          },
+        ]
+      : undefined,
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -114,6 +127,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="overflow-x-clip">
+        <GtmNoscript />
         {children}
         <WhatsAppFloat />
         <Scripts />
@@ -127,6 +141,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <GtmRouteTracker />
       <MassiveSchema />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
