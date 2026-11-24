@@ -650,6 +650,17 @@ function Contact() {
                   suppressHydrationWarning
                 />
               </Field>
+              <Field label="Phone Number">
+                <input
+                  type="tel"
+                  id="contact-phone"
+                  name="phone"
+                  required
+                  className="w-full bg-transparent border-b border-border-bright py-3 text-sm text-foreground focus:border-brand-red outline-none transition-colors"
+                  placeholder="+91 98765 43210"
+                  suppressHydrationWarning
+                />
+              </Field>
               <Field label="Requirement Scope">
                 <select
                   id="contact-requirement"
